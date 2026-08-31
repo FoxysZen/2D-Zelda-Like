@@ -1,8 +1,12 @@
 #pragma once
 #include "../core/GameLogic.h"
+#include <SDL2/SDL_render.h>
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <unordered_map>
+
+const std::string playerAtlas = "../../assets/playerAtlas.png";
 
 /**
  * @brief Handles window creation, SDL renderer setup, and drawing operations.
@@ -29,6 +33,14 @@ class RenderEngine
         void quit();
 
         /**
+         * @brief Loads a texture atlas and stores it in the vector of atlases.
+         * 
+         * @param texture The name of the texture atlas file.
+         * @return 0 if loading succeeded, 1 if an SDL error occurred.
+         */
+        int loadTexture(const std::string &texture);
+
+        /**
          * @brief Renders the current game state to the window.
          * 
          * @param game Pointer to the GameLogic object containing the state to draw.
@@ -40,4 +52,6 @@ class RenderEngine
         SDL_Renderer *renderer;
 
         int scale;
+
+        std::unordered_map<std::string, SDL_Texture*> atlases;
 };

@@ -1,4 +1,7 @@
 #include "RenderEngine.h"
+#include <SDL2/SDL_rect.h>
+#include <SDL2/SDL_render.h>
+#include <SDL2/SDL_stdinc.h>
 
 RenderEngine::RenderEngine() {}
 RenderEngine::~RenderEngine() {}
@@ -56,11 +59,35 @@ void RenderEngine::quit()
     SDL_Quit();
 }
 
+int RenderEngine::loadTexture(const std::string &texture)
+{
+    SDL_Texture* atlas = IMG_LoadTexture(renderer, texture.c_str());
+    if (!atlas)
+    {
+        std::cerr << "Error loading texture '" << texture << "': " 
+            << SDL_GetError() << std::endl;
+        return 1;
+    }
+    atlases[texture] = atlas;
+
+    return 0;
+}
+
 void RenderEngine::render(GameLogic *game)
 {
     // TEMPORAL
     SDL_SetRenderDrawColor(renderer, 155, 188, 15, 255);
     SDL_RenderClear(renderer);
+
+    // Renders the player
+    const SDL_Rect *playerSprite = game->getPlayer()->getSpritePos();
+    const SDL_Rect *rawPlayerPos = game->getPlayer()->getPosition();
+
+    SDL_Rect playerPos = *rawPlayerPos;
+    playerPos.h *= scale;
+    playerPos.w *= scale;
+
+    SDL_RenderCopy(renderer, atlases["assets/playerAtlas.png"], playerSprite, &playerPos);
 
     // Updates the Render
     SDL_RenderPresent(renderer);

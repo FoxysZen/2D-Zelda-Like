@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include "player.h"
 
 /**
  * @brief Handles all core game logic, state updates, and main loop flags.
@@ -16,11 +17,22 @@ class GameLogic
         void update();
 
         /**
+         * @brief Initializes the Player object.
+         */
+        void initPlayer();
+
+        /**
+         * @brief Gets the pointer to the Player object.
+         * 
+         * @return Pointer to Player
+         */
+        Player *getPlayer();
+        /**
          * @brief Checks if the main loop is currently active.
          * 
          * @return True if the game is running, false if it should stop.
          */
-        bool isRunning();
+        bool isRunning() const;
         /**
          * @brief Sets the game running status to control the main loop.
          * 
@@ -28,6 +40,27 @@ class GameLogic
          */
         void setRunning(bool value);
 
+        /**
+         * @brief Moves the player 1 unit up.
+         */
+        void moveUp();
+        /**
+         * @brief Moves the player 1 unit down.
+         */
+        void moveDown();
+        /**
+         * @brief Moves the player 1 unit left.
+         */
+        void moveLeft();
+        /**
+         * @brief Moves the player 1 unit right.
+         */
+        void moveRight();
+
+        int scale = 1;
+
     private:
         bool running;
+
+        Player player;
 };

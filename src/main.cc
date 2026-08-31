@@ -13,6 +13,10 @@ int main (int argc, char *argv[])
     renderer.init("2D Zelda Like", SCREEN_WIDTH, SCREEN_HEIGHT, SCALE);
 
     GameLogic game;
+    game.scale = SCALE;
+    game.initPlayer();
+
+    renderer.loadTexture("assets/playerAtlas.png");
     
     while (game.isRunning())
     {

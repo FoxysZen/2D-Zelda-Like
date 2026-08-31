@@ -15,28 +15,28 @@ void InputManager::processEvents(GameLogic *game)
             switch (event.key.keysym.sym)
             {
                 case SDLK_UP:
-                    // game.moveUp();
+                    game->moveUp();
                     break;
                 case SDLK_DOWN:
-                    // game.moveDown();
+                    game->moveDown();
                     break;
                 case SDLK_LEFT:
-                    // game.moveLeft();
+                    game->moveLeft();
                     break;
                 case SDLK_RIGHT:
-                    // game.moveRight();
+                    game->moveRight();
                     break;
                 case SDLK_w:
-                    // game.moveUp();
+                    game->moveUp();
                     break;
                 case SDLK_s:
-                    // game.moveDown();
+                    game->moveDown();
                     break;
                 case SDLK_a:
-                    // game.moveLeft();
+                    game->moveLeft();
                     break;
                 case SDLK_d:
-                    // game.moveRight();
+                    game->moveRight();
                     break;
                 case SDLK_ESCAPE:
                     game->setRunning(false);
