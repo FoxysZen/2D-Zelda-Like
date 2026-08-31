@@ -9,6 +9,7 @@ Make sure you have the following packages installed:
 * `g++` (C++17 support)
 * `make`
 * `SDL2`
+* `SDL2_image`
 
 On Arch Linux / CachyOS:
 ```bash

@@ -2,6 +2,7 @@
 #include "../core/GameLogic.h"
 #include <iostream>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 /**
  * @brief Handles window creation, SDL renderer setup, and drawing operations.

@@ -27,6 +27,18 @@ int RenderEngine::init(const char *title, int width, int height, int _scale)
         return 1;
     }
 
+    SDL_Surface* icon = IMG_Load("assets/icon.png");
+    if (icon != nullptr) 
+    {
+        SDL_SetWindowIcon(window, icon);
+        SDL_FreeSurface(icon);
+    } 
+    else 
+    {
+        std::cerr << "Warning: Could not load window icon: " << IMG_GetError()
+            << std::endl;
+    }
+
     renderer = SDL_CreateRenderer(window, -1, 0);
     if (!renderer)
     {
