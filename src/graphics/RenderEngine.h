@@ -1,13 +1,14 @@
 #pragma once
+#include <algorithm>
 #include <cstddef>
 #include "../core/GameLogic.h"
 #include <iostream>
 #include "LevelManager.h"
+#include <ostream>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <string>
-//#include "../core/Tilemap.h"
 #include <unordered_map>
 
 
@@ -57,6 +58,7 @@ class RenderEngine
         SDL_Renderer *renderer;
 
         int scale;
+        int screenWidth, screenHeight;
 
         std::unordered_map<std::string, SDL_Texture*> atlases;
 };

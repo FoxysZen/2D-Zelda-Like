@@ -16,7 +16,7 @@ void Tilemap::loadTileMap(const std::string &name)
     }
 }
 
-MapData *Tilemap::getCurrentMap()
+const MapData *Tilemap::getCurrentMap() const
 {
     return &currentMap;
 }

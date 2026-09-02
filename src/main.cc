@@ -4,8 +4,11 @@
 #include <SDL2/SDL.h>
 
 const int SCALE = 4;
-const int SCREEN_WIDTH = 160;
-const int SCREEN_HEIGHT = 144;
+const int SCREEN_WIDTH = 240;
+const int SCREEN_HEIGHT = 160;
+
+const int TARGET_FPS = 60;
+const int FRAME_DELAY = 1000 / TARGET_FPS;
 
 int main (int argc, char *argv[])
 {
@@ -13,23 +16,33 @@ int main (int argc, char *argv[])
     renderer.init("2D Zelda Like", SCREEN_WIDTH, SCREEN_HEIGHT, SCALE);
 
     GameLogic game;
-    game.scale = SCALE;
+    game.init(SCALE, SCREEN_WIDTH, SCREEN_HEIGHT);
     
-    game.initPlayer();
     renderer.loadTexture(game.getPlayer()->getAtlasName());
 
     renderer.loadTexture(game.getTileMap()->getCurrentMap()->atlas);
+
+    Uint64 lastStart = SDL_GetTicks64();
     
     while (game.isRunning())
     {
+        Uint64 frameStart = SDL_GetTicks64();
+        
+        float deltaTime = (frameStart - lastStart) / 1000.0f;
+        lastStart = frameStart;
+
         InputManager::processEvents(&game);
 
-        game.update();
+        game.update(deltaTime);
         
         renderer.render(&game);
 
         // Limits to 60FPS
-        SDL_Delay(16);
+        Uint32 frameTime = SDL_GetTicks64() - frameStart;
+        if (FRAME_DELAY > frameTime)
+        {
+            SDL_Delay(FRAME_DELAY - frameTime);
+        }
     }
 
     renderer.quit();

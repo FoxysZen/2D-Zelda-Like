@@ -26,7 +26,7 @@ class Tilemap
          * 
          * @return Pointer to the Matrix.
          */
-        MapData *getCurrentMap();
+        const MapData *getCurrentMap() const;
 
     private:
         MapData currentMap;

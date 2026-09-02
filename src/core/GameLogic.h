@@ -1,4 +1,5 @@
 #pragma once
+#include "Camera.h"
 #include <cstdint>
 #include "Player.h"
 #include "Tilemap.h"
@@ -13,27 +14,33 @@ class GameLogic
         ~GameLogic();
 
         /**
+         * @brief Initializes the tilemap, player and the camera, aswell as the variables.
+         */
+        void init(int _scale, int _screenWidth, int _screenHeight);
+        /**
          * @brief Updates the game state, entities, and logic for the current frame.
          */
-        void update();
-
-        /**
-         * @brief Initializes the Player object.
-         */
-        void initPlayer();
+        void update(const float &_deltaTime);
 
         /**
          * @brief Gets the pointer to the Player object.
          * 
-         * @return Pointer to Player
+         * @return constant pointer to the Player.
          */
-        Player *getPlayer();
+        const Player *getPlayer();
         /**
-         * @brief Gets the TileMap object
+         * @brief Gets the TileMap object.
          * 
-         * @return Tilemap* 
+         * @return Constant pointer to the Tilemap.
          */
-        Tilemap *getTileMap();
+        const Tilemap *getTileMap();
+        /**
+         * @brief Gets the Camera object.
+         * 
+         * @return Constant pointer to the Camera.
+         */
+        const Camera *getCamera();
+
         /**
          * @brief Checks if the main loop is currently active.
          * 
@@ -64,11 +71,19 @@ class GameLogic
          */
         void moveRight();
 
-        int scale = 1;
-
     private:
-        bool running;
+        /**
+         * @brief Initializes the Player object.
+         */
+        void initPlayer();
 
+        bool running;
+        int scale = 1;
+        float deltaTime;
+
+        int screenWidth, screenHeight;
+
+        Camera camera;
         Player player;
         Tilemap tilemap;
 };

@@ -1,4 +1,5 @@
 #include "RenderEngine.h"
+#include <iostream>
 #include <ostream>
 
 RenderEngine::RenderEngine() {}
@@ -6,7 +7,9 @@ RenderEngine::~RenderEngine() {}
 
 int RenderEngine::init(const char *title, int width, int height, int _scale)
 {
-    scale = _scale;
+    scale        = _scale;
+    screenWidth  = width;
+    screenHeight = height;
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
@@ -73,15 +76,27 @@ int RenderEngine::loadTexture(const std::string &texture)
 
 void RenderEngine::render(GameLogic *game)
 {
-    // TEMPORAL
+    // BG color fill
     SDL_SetRenderDrawColor(renderer, 155, 188, 15, 255);
     SDL_RenderClear(renderer);
 
-    // Renders the Map
-    MapData *map = game->getTileMap()->getCurrentMap();
+    const MapData *map = game->getTileMap()->getCurrentMap();
     const int mapWidth = map->mapWidth;
+    const int mapHeight = map->mapHeight;
     const int tileSize = map->tileSize;
     const std::string mapAtlas = map->atlas;
+
+    // Camera Bounds for Tile Culling
+    SDL_Rect viewPort = game->getCamera()->getViewPort();
+    int startX = viewPort.x / tileSize;
+    int startY = viewPort.y / tileSize;
+    int endX   = (viewPort.x + viewPort.w) / tileSize + 2;
+    int endY   = (viewPort.y + viewPort.h) / tileSize + 2;
+
+    startX = std::max(0, startX);
+    startY = std::max(0, startY);
+    endX   = std::min(mapWidth, endX);
+    endY   = std::min(mapHeight, endY);
 
     int atlasWidth;
     SDL_QueryTexture(
@@ -93,41 +108,45 @@ void RenderEngine::render(GameLogic *game)
     );
     const int tilesPerRow = atlasWidth / tileSize;
 
-    // Base tiles
-    for (size_t id = 0, size = map->worldMap.size(); id < size; ++id)
+    // Map
+    for (int y = startY; y < endY; ++y)
     {
-        int tileId = map->worldMap[id];
+        for (int x = startX; x < endX; ++x)
+        {
+            // Base Tiles
+            int tileId = map->worldMap[y * mapWidth + x];
 
-        // Tile position in the PNG
-        int posX = id % mapWidth * tileSize * scale;
-        int posY = id / mapWidth * tileSize * scale;
-        SDL_Rect tilePos = {posX, posY, tileSize * scale, tileSize * scale};
+            // Tile position in the PNG
+            int i = tileId % tilesPerRow * tileSize;
+            int j = tileId / tilesPerRow * tileSize;
+            SDL_Rect tileTexture = {i, j, tileSize, tileSize};
 
-        // Tile position in the world space.
-        int i = tileId % tilesPerRow * tileSize;
-        int j = tileId / tilesPerRow * tileSize;
-        SDL_Rect tileTexture  = {i, j, tileSize, tileSize};
+            // Tile position in the world space.
+            int posX = x * tileSize;
+            int posY = y * tileSize;
+            SDL_Rect tilePos = {
+                (posX - viewPort.x) * scale,
+                (posY - viewPort.y) * scale,
+                tileSize * scale,
+                tileSize * scale
+            };
 
-        SDL_RenderCopy(renderer, atlases[mapAtlas], &tileTexture, &tilePos);
-    }
+            SDL_RenderCopy(renderer, atlases[mapAtlas], &tileTexture, &tilePos);
 
-    // Decoration tiles
-    for (size_t id = 0, size = map->decorationMap.size(); id < size; ++id)
-    {
-        int tileId = map->decorationMap[id];
-        if (tileId == 0) continue;
-
-        // Tile position in the PNG
-        int posX = id % mapWidth * tileSize * scale;
-        int posY = id / mapWidth * tileSize * scale;
-        SDL_Rect tilePos = {posX, posY, tileSize * scale, tileSize * scale};
-
-        // Tile position in the world space.
-        int i = tileId % tilesPerRow * tileSize;
-        int j = tileId / tilesPerRow * tileSize;
-        SDL_Rect tileTexture  = {i, j, tileSize, tileSize};
-
-        SDL_RenderCopy(renderer, atlases[mapAtlas], &tileTexture, &tilePos);
+            // Decoration Tiles
+            tileId = map->decorationMap[y * mapWidth + x];
+            if (tileId != 0)
+            {
+                // Tile position in the PNG
+                i = tileId % tilesPerRow * tileSize;
+                j = tileId / tilesPerRow * tileSize;
+                tileTexture  = {i, j, tileSize, tileSize};
+                
+                // Tile position in the world space can be reutilized.
+                
+                SDL_RenderCopy(renderer, atlases[mapAtlas], &tileTexture, &tilePos);
+            }
+        }
     }
 
     // Render Objects
@@ -139,6 +158,8 @@ void RenderEngine::render(GameLogic *game)
     const std::string playerAtlas = game->getPlayer()->getAtlasName();
 
     SDL_Rect playerPos = *rawPlayerPos;
+    playerPos.x = (rawPlayerPos->x - viewPort.x) * scale;
+    playerPos.y = (rawPlayerPos->y - viewPort.y) * scale;
     playerPos.h *= scale;
     playerPos.w *= scale;
 
