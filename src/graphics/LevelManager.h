@@ -1,0 +1,84 @@
+#pragma once
+#include <cstdint>
+#include <SDL2/SDL_rect.h>
+#include <string>
+#include <vector>
+
+/**
+ * @brief Contains the info of a single object (Items or decorations).
+ * 
+ */
+struct ObjectData
+{
+    uint8_t id = 0;
+    SDL_Rect position;
+
+    bool enabled = true;
+
+    // Triggers...
+};
+
+/**
+ * @brief Contains the info of a single level.
+ */
+struct MapData
+{
+    std::string atlas = "assets/testWorldAtlas.png";
+
+    int tileSize  = 16;
+    int mapWidth  = 0;
+    int mapHeight = 0;
+
+    std::vector<uint8_t> worldMap;
+    std::vector<uint8_t> decorationMap;
+    std::vector<ObjectData> objectMap;
+    std::vector<uint8_t> colisionMap;
+};
+
+/**
+ * @brief Contains the info of every level.
+ */
+class LevelManager
+{
+    public:
+        static MapData getTestMap()
+        {
+            MapData level;
+
+            level.atlas = "assets/testWorldAtlas.png";
+
+            level.mapWidth = 5;
+            level.mapHeight = 5;
+
+            level.worldMap = {
+                92, 92, 92, 92, 92,
+                92, 17, 17, 17, 92,
+                92, 17, 17, 17, 92,
+                92, 17, 17, 17, 92,
+                92, 92, 92, 92, 92
+            };
+
+            level.objectMap = {
+                {108, { 0,  0, 16, 16}},
+                {  0, {56, 56, 16, 16}}
+            };
+
+            level.decorationMap = {
+                20, 20, 20, 20, 20,
+                20,  0,  0,  0, 20,
+                20,  0,  0,  0, 20,
+                20,  0,  0,  0, 20,
+                20, 20, 20, 20, 20
+            };
+
+            level.colisionMap = {
+                1, 1, 1, 1, 1,
+                1, 0, 0, 0, 1,
+                1, 0, 0, 0, 1,
+                1, 0, 0, 0, 1,
+                1, 1, 1, 1, 1
+            };
+
+            return level;
+        }
+};

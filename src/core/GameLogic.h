@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
-#include "player.h"
+#include "Player.h"
+#include "Tilemap.h"
 
 /**
  * @brief Handles all core game logic, state updates, and main loop flags.
@@ -27,6 +28,12 @@ class GameLogic
          * @return Pointer to Player
          */
         Player *getPlayer();
+        /**
+         * @brief Gets the TileMap object
+         * 
+         * @return Tilemap* 
+         */
+        Tilemap *getTileMap();
         /**
          * @brief Checks if the main loop is currently active.
          * 
@@ -63,4 +70,5 @@ class GameLogic
         bool running;
 
         Player player;
+        Tilemap tilemap;
 };

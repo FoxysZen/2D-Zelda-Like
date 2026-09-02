@@ -1,4 +1,4 @@
-#include "player.h"
+#include "Player.h"
 
 Player::Player()
 {
@@ -23,6 +23,11 @@ const SDL_Rect *Player::getPosition() const
 const SDL_Rect *Player::getSpritePos() const
 {
     return &spritePos;
+}
+
+std::string Player::getAtlasName() const
+{
+    return currentAtlas;
 }
 
 void Player::setPosition(const SDL_Rect &newPos)

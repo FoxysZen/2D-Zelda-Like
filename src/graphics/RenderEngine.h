@@ -1,10 +1,15 @@
 #pragma once
+#include <cstddef>
 #include "../core/GameLogic.h"
-#include <SDL2/SDL_render.h>
 #include <iostream>
+#include "LevelManager.h"
+#include <SDL2/SDL_render.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <string>
+//#include "../core/Tilemap.h"
 #include <unordered_map>
+
 
 const std::string playerAtlas = "../../assets/playerAtlas.png";
 

@@ -1,5 +1,6 @@
 #pragma once
 #include <SDL2/SDL_rect.h>
+#include <string>
 
 /**
  * @brief Handles the player's state, position, and sprite data.
@@ -31,6 +32,12 @@ class Player
          * @return The current SDL_Rect sprite.
          */
         const SDL_Rect *getSpritePos() const;
+        /**
+         * @brief Gets the Atlas Name of the player.
+         * 
+         * @return Constant pointer to the std:string.
+         */
+        std::string getAtlasName() const;
 
         /**
          * @brief Sets the new world position of the player.
@@ -42,4 +49,7 @@ class Player
     private:
         SDL_Rect spritePos;
         SDL_Rect position;
+
+        // Not const so so that the appearance can be changed in-game.
+        std::string currentAtlas = "assets/playerAtlas.png";
 };

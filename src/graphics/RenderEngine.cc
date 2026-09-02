@@ -1,7 +1,5 @@
 #include "RenderEngine.h"
-#include <SDL2/SDL_rect.h>
-#include <SDL2/SDL_render.h>
-#include <SDL2/SDL_stdinc.h>
+#include <ostream>
 
 RenderEngine::RenderEngine() {}
 RenderEngine::~RenderEngine() {}
@@ -79,15 +77,74 @@ void RenderEngine::render(GameLogic *game)
     SDL_SetRenderDrawColor(renderer, 155, 188, 15, 255);
     SDL_RenderClear(renderer);
 
+    // Renders the Map
+    MapData *map = game->getTileMap()->getCurrentMap();
+    const int mapWidth = map->mapWidth;
+    const int tileSize = map->tileSize;
+    const std::string mapAtlas = map->atlas;
+
+    int atlasWidth;
+    SDL_QueryTexture(
+        atlases[mapAtlas],
+        nullptr,
+        nullptr,
+        &atlasWidth,
+        nullptr
+    );
+    const int tilesPerRow = atlasWidth / tileSize;
+
+    // Base tiles
+    for (size_t id = 0, size = map->worldMap.size(); id < size; ++id)
+    {
+        int tileId = map->worldMap[id];
+
+        // Tile position in the PNG
+        int posX = id % mapWidth * tileSize * scale;
+        int posY = id / mapWidth * tileSize * scale;
+        SDL_Rect tilePos = {posX, posY, tileSize * scale, tileSize * scale};
+
+        // Tile position in the world space.
+        int i = tileId % tilesPerRow * tileSize;
+        int j = tileId / tilesPerRow * tileSize;
+        SDL_Rect tileTexture  = {i, j, tileSize, tileSize};
+
+        SDL_RenderCopy(renderer, atlases[mapAtlas], &tileTexture, &tilePos);
+    }
+
+    // Decoration tiles
+    for (size_t id = 0, size = map->decorationMap.size(); id < size; ++id)
+    {
+        int tileId = map->decorationMap[id];
+        if (tileId == 0) continue;
+
+        // Tile position in the PNG
+        int posX = id % mapWidth * tileSize * scale;
+        int posY = id / mapWidth * tileSize * scale;
+        SDL_Rect tilePos = {posX, posY, tileSize * scale, tileSize * scale};
+
+        // Tile position in the world space.
+        int i = tileId % tilesPerRow * tileSize;
+        int j = tileId / tilesPerRow * tileSize;
+        SDL_Rect tileTexture  = {i, j, tileSize, tileSize};
+
+        SDL_RenderCopy(renderer, atlases[mapAtlas], &tileTexture, &tilePos);
+    }
+
+    // Render Objects
+    // Render Enemies
+
     // Renders the player
     const SDL_Rect *playerSprite = game->getPlayer()->getSpritePos();
     const SDL_Rect *rawPlayerPos = game->getPlayer()->getPosition();
+    const std::string playerAtlas = game->getPlayer()->getAtlasName();
 
     SDL_Rect playerPos = *rawPlayerPos;
     playerPos.h *= scale;
     playerPos.w *= scale;
 
-    SDL_RenderCopy(renderer, atlases["assets/playerAtlas.png"], playerSprite, &playerPos);
+    SDL_RenderCopy(renderer, atlases[playerAtlas], playerSprite, &playerPos);
+
+    // Render UI
 
     // Updates the Render
     SDL_RenderPresent(renderer);

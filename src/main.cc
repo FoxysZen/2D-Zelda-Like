@@ -14,9 +14,11 @@ int main (int argc, char *argv[])
 
     GameLogic game;
     game.scale = SCALE;
+    
     game.initPlayer();
+    renderer.loadTexture(game.getPlayer()->getAtlasName());
 
-    renderer.loadTexture("assets/playerAtlas.png");
+    renderer.loadTexture(game.getTileMap()->getCurrentMap()->atlas);
     
     while (game.isRunning())
     {
