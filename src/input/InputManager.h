@@ -1,6 +1,7 @@
 #pragma once
 #include "../core/GameLogic.h"
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_keycode.h>
 
 /**
  * @brief Handles user inputs and triggers corresponding game actions.

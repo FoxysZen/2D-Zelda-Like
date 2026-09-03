@@ -11,9 +11,6 @@
 #include <string>
 #include <unordered_map>
 
-
-const std::string playerAtlas = "../../assets/playerAtlas.png";
-
 /**
  * @brief Handles window creation, SDL renderer setup, and drawing operations.
  */

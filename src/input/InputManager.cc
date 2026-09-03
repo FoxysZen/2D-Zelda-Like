@@ -1,5 +1,4 @@
 #include "InputManager.h"
-#include <SDL2/SDL_keycode.h>
 
 void InputManager::processEvents(GameLogic *game)
 {
@@ -14,34 +13,22 @@ void InputManager::processEvents(GameLogic *game)
         {
             switch (event.key.keysym.sym)
             {
-                case SDLK_UP:
-                    game->moveUp();
-                    break;
-                case SDLK_DOWN:
-                    game->moveDown();
-                    break;
-                case SDLK_LEFT:
-                    game->moveLeft();
-                    break;
-                case SDLK_RIGHT:
-                    game->moveRight();
-                    break;
-                case SDLK_w:
-                    game->moveUp();
-                    break;
-                case SDLK_s:
-                    game->moveDown();
-                    break;
-                case SDLK_a:
-                    game->moveLeft();
-                    break;
-                case SDLK_d:
-                    game->moveRight();
-                    break;
                 case SDLK_ESCAPE:
                     game->setRunning(false);
                     break;
             }
         }
     }
+
+    const Uint8 *state = SDL_GetKeyboardState(NULL);
+
+    float dirX = 0.0f;
+    float dirY = 0.0f;
+
+    if (state[SDL_SCANCODE_W] || state[SDL_SCANCODE_UP])    dirY -= 1.0f;
+    if (state[SDL_SCANCODE_S] || state[SDL_SCANCODE_DOWN])  dirY += 1.0f;
+    if (state[SDL_SCANCODE_A] || state[SDL_SCANCODE_LEFT])  dirX -= 1.0f;
+    if (state[SDL_SCANCODE_D] || state[SDL_SCANCODE_RIGHT]) dirX += 1.0f;
+
+    game->handlePlayerMovement(dirX, dirY);
 }

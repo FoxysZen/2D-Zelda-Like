@@ -55,21 +55,12 @@ class GameLogic
         void setRunning(bool value);
 
         /**
-         * @brief Moves the player 1 unit up.
+         * @brief Moves the player in the direction passed.
+         * 
+         * @param dirX Horizontal movement.
+         * @param dirY Vertical movement.
          */
-        void moveUp();
-        /**
-         * @brief Moves the player 1 unit down.
-         */
-        void moveDown();
-        /**
-         * @brief Moves the player 1 unit left.
-         */
-        void moveLeft();
-        /**
-         * @brief Moves the player 1 unit right.
-         */
-        void moveRight();
+        void handlePlayerMovement(float dirX, float dirY);
 
     private:
         /**

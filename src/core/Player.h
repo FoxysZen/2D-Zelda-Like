@@ -2,6 +2,13 @@
 #include <SDL2/SDL_rect.h>
 #include <string>
 
+enum playerStateMachine
+{
+    IDLE,
+    WALKING,
+    ATTACKING
+};
+
 /**
  * @brief Handles the player's state, position, and sprite data.
  */
@@ -19,6 +26,15 @@ class Player
          * @return 0 if no errors occur, otherwise 1.
          */
         int init(const SDL_Rect &_spritePos, const SDL_Rect &_pos);
+
+        /**
+         * @brief Moves the player in a certain direction.
+         * 
+         * @param dirX Horizontal amount.
+         * @param dirY Vertical amount.
+         * @param deltaTime Time between frames.
+         */
+        void move(float dirX, float dirY, float deltaTime);
 
         /**
          * @brief Gets the current world position of the player.
@@ -48,8 +64,12 @@ class Player
 
     private:
         SDL_Rect spritePos;
-        SDL_Rect position;
+        SDL_Rect position = {32, 32, 16, 16};
+        float rawPosX = 32.0f, rawPosY = 32.0f;
+        float speed = 120.0f; // px/s
 
         // Not const so so that the appearance can be changed in-game.
         std::string currentAtlas = "assets/playerAtlas.png";
+
+        playerStateMachine state = IDLE;
 };
