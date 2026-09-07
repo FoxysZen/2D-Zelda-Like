@@ -1,7 +1,9 @@
 #pragma once
 #include "Camera.h"
 #include <cstdint>
+#include "PhysicsSystem.h"
 #include "Player.h"
+#include <SDL2/SDL_rect.h>
 #include "Tilemap.h"
 
 /**
@@ -75,6 +77,7 @@ class GameLogic
         int screenWidth, screenHeight;
 
         Camera camera;
+        PhysicsSystem physics;
         Player player;
         Tilemap tilemap;
 };
