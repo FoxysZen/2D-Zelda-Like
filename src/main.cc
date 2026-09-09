@@ -15,8 +15,10 @@ int main (int argc, char *argv[])
     RenderEngine renderer;
     renderer.init("2D Zelda Like", SCREEN_WIDTH, SCREEN_HEIGHT, SCALE);
 
+    InputManager inputManager;
+
     GameLogic game;
-    game.init(SCALE, SCREEN_WIDTH, SCREEN_HEIGHT);
+    game.init(SCALE, SCREEN_WIDTH, SCREEN_HEIGHT, inputManager);
     
     renderer.loadTexture(game.getPlayer()->getAtlasName());
 
@@ -31,7 +33,7 @@ int main (int argc, char *argv[])
         float deltaTime = (frameStart - lastStart) / 1000.0f;
         lastStart = frameStart;
 
-        InputManager::processEvents(&game);
+        inputManager.processEvents(&game);
 
         game.update(deltaTime);
         

@@ -150,6 +150,28 @@ void RenderEngine::render(GameLogic *game)
     }
 
     // Render Objects
+    for (const auto &data : map->objectMap)
+    {
+        // Tile position in the PNG
+        SDL_Rect tileTexture = {
+            data.id % tilesPerRow * tileSize,
+            data.id / tilesPerRow * tileSize,
+            16,
+            16
+        };
+
+        // Tile position in the world space.
+        SDL_Rect tilePos = {
+            (data.position.x - viewPort.x) * scale,
+            (data.position.y - viewPort.y) * scale,
+            data.position.w * scale,
+            data.position.h * scale
+        };
+
+        // TODO: change the atlas to the objetAtlas
+        SDL_RenderCopy(renderer, atlases[mapAtlas], &tileTexture, &tilePos);
+    }
+
     // Render Enemies
 
     // Renders the player
