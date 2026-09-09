@@ -20,7 +20,10 @@ void Player::move(float dirX, float dirY, float deltaTime)
 {
     if (dirX != 0.0f || dirY != 0.0f)
     {
-        state = WALKING;
+        if (state != SWIMMING)
+        {
+            state = WALKING;
+        }
     }
     else
     {
@@ -28,15 +31,21 @@ void Player::move(float dirX, float dirY, float deltaTime)
         return;
     }
 
+    float actualSpeed = speed;
+    if (state == SWIMMING)
+    {
+        actualSpeed *= slowDown;
+    }
+
     if (dirX != 0.0f)
     {
-        rawPosX += dirX * speed * deltaTime + subX;
+        rawPosX += dirX * actualSpeed * deltaTime + subX;
         position.x = static_cast<int>(std::round(rawPosX));
     }
 
     if (dirY != 0.0f)
     {
-        rawPosY += dirY * speed * deltaTime + subY;
+        rawPosY += dirY * actualSpeed * deltaTime + subY;
         position.y = static_cast<int>(std::round(rawPosY));
     }
 }

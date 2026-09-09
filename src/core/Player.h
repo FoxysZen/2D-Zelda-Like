@@ -6,7 +6,8 @@ enum playerStateMachine
 {
     IDLE,
     WALKING,
-    ATTACKING
+    ATTACKING,
+    SWIMMING
 };
 
 /**
@@ -88,6 +89,7 @@ class Player
         float rawPosX = 32.0f, rawPosY = 32.0f;
         float subX = 0.0f, subY = 0.0f;
         float speed = 90.0f; // px/s
+        float slowDown = 0.75f;
 
         // Not const so so that the appearance can be changed in-game.
         std::string currentAtlas = "assets/playerAtlas.png";
