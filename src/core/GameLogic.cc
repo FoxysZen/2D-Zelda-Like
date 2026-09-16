@@ -155,9 +155,9 @@ void GameLogic::handlePlayerMovement(float dirX, float dirY)
 
 void GameLogic::initPlayer()
 {
-    SDL_Rect sprite = {16, 0, 16, 16};
+    SDL_Rect sprite = {0, 0, 32, 32};
 
-    player.init(sprite, {32, 32, 16, 16}, {4, 12, 8, 4});
+    player.init(sprite, {32, 32, 32, 32}, {11, 26, 11, 6});
 }
 
 void GameLogic::registerTriggerInGrid(TriggerZone *trigger)

@@ -84,8 +84,8 @@ class Player
 
     private:
         SDL_Rect spritePos;
-        SDL_Rect position = {32, 32, 16, 16};
-        SDL_Rect colision = { 4, 12,  8,  4};
+        SDL_Rect position = {32, 32, 32, 32};
+        SDL_Rect colision = { 8, 24,  16,  8};
         float rawPosX = 32.0f, rawPosY = 32.0f;
         float subX = 0.0f, subY = 0.0f;
         float speed = 90.0f; // px/s
