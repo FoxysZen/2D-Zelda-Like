@@ -1,6 +1,4 @@
 #include "GameLogic.h"
-#include <SDL2/SDL_scancode.h>
-#include <string>
 
 GameLogic::GameLogic()
 {
@@ -36,6 +34,19 @@ void GameLogic::update(const float &_deltaTime)
     checkTriggerCollisions();
 
     camera.update(*player.getPosition());
+
+    updateAnimations();
+}
+
+void GameLogic::updateAnimations()
+{
+    timer += deltaTime;
+
+    if (timer >= timePerFrame)
+    {
+        timer = 0.0f;
+        player.updateSprite();
+    }
 }
 
 void GameLogic::loadLevel(const std::string &levelName)
@@ -119,7 +130,27 @@ void GameLogic::handlePlayerMovement(float dirX, float dirY)
     if (dirX == 0.0f && dirY == 0.0f)
     {
         player.move(0.0f, 0.0f, deltaTime);
+        player.setState(PlayerStateMachine::IDLE);
         return;
+    }
+    
+    player.setState(PlayerStateMachine::WALKING);
+
+    if (dirX > 0.0f)
+    {
+        player.setDirection(Direction::RIGHT);
+    }
+    else if (dirX < 0.0f)
+    {
+        player.setDirection(Direction::LEFT);
+    }
+    else if (dirY > 0.0f)
+    {
+        player.setDirection(Direction::FRONT);
+    }
+    else if (dirY < 0.0f)
+    {
+        player.setDirection(Direction::BACK);
     }
 
     player.move(dirX, dirY, deltaTime);

@@ -1,8 +1,23 @@
 #pragma once
 #include <SDL2/SDL_rect.h>
+#include <cstdint>
 #include <string>
 
-enum playerStateMachine
+/**
+ * @brief Indicates the direction the player is looking at.
+ */
+enum Direction
+{
+    FRONT,
+    LEFT,
+    RIGHT,
+    BACK
+};
+
+/**
+ * @brief Indicates the state of the player in the frame.
+ */
+enum PlayerStateMachine
 {
     IDLE,
     WALKING,
@@ -37,6 +52,17 @@ class Player
          * @param deltaTime Time between frames.
          */
         void move(float dirX, float dirY, float deltaTime);
+        /**
+         * @brief Updates the sprite of the animation.
+         */
+        void updateSprite();
+
+        /**
+         * @brief Returns if the player if looking at the left.
+         * 
+         * @return true if the direction of the player is Direction::LEFT, otherwise false.
+         */
+        bool isLookingLeft() const;
 
         /**
          * @brief Gets the current world position of the player.
@@ -55,7 +81,7 @@ class Player
          * 
          * @return The current SDL_Rect sprite.
          */
-        const SDL_Rect *getSpritePos() const;
+        const SDL_Rect getSpritePos() const;
         /**
          * @brief Gets the Atlas Name of the player.
          * 
@@ -81,6 +107,18 @@ class Player
          * @param _x The Y coordinate of the new position.
          */
         void setPositionY(int _y);
+        /**
+         * @brief Sets the State of the player
+         * 
+         * @param newDir The new State of the player.
+         */
+        void setState(PlayerStateMachine newState);
+        /**
+         * @brief Sets the Direction of the player
+         * 
+         * @param newDir The new direction where its looking at.
+         */
+        void setDirection(Direction newDir);
 
     private:
         SDL_Rect spritePos;
@@ -91,8 +129,19 @@ class Player
         float speed = 90.0f; // px/s
         float slowDown = 0.75f;
 
+        int animationFrame = 0;
+
         // Not const so so that the appearance can be changed in-game.
         std::string currentAtlas = "assets/playerAtlas.png";
 
-        playerStateMachine state = IDLE;
+        PlayerStateMachine state = IDLE;
+        Direction direction = FRONT;
+
+        const uint8_t SPRITE_SIZE = 32;
+
+        const SDL_Rect PLAYER_IDLE = { 0, 32, 32, 32 };
+        const SDL_Rect PLAYER_WALK = { 0, 64, 32, 32 };
+
+        const uint8_t IDLE_FRAMES = 4;
+        const uint8_t WALK_FRAMES = 4;
 };

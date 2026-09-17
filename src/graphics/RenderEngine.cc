@@ -1,6 +1,4 @@
 #include "RenderEngine.h"
-#include <iostream>
-#include <ostream>
 
 RenderEngine::RenderEngine() {}
 RenderEngine::~RenderEngine() {}
@@ -175,9 +173,10 @@ void RenderEngine::render(GameLogic *game)
     // Render Enemies
 
     // Renders the player
-    const SDL_Rect *playerSprite = game->getPlayer()->getSpritePos();
+    const SDL_Rect playerSprite = game->getPlayer()->getSpritePos();
     const SDL_Rect *rawPlayerPos = game->getPlayer()->getPosition();
     const std::string playerAtlas = game->getPlayer()->getAtlasName();
+    bool left = game->getPlayer()->isLookingLeft();
 
     SDL_Rect playerPos = *rawPlayerPos;
     playerPos.x = (rawPlayerPos->x - viewPort.x) * scale;
@@ -185,7 +184,14 @@ void RenderEngine::render(GameLogic *game)
     playerPos.h *= scale;
     playerPos.w *= scale;
 
-    SDL_RenderCopy(renderer, atlases[playerAtlas], playerSprite, &playerPos);
+    SDL_RendererFlip flip = SDL_FLIP_NONE;
+    if (left)
+    {
+        flip = SDL_FLIP_HORIZONTAL;
+    }
+
+    SDL_RenderCopyEx(renderer, atlases[playerAtlas], &playerSprite, &playerPos, 
+                     0.0, nullptr, flip);
 
     // Render UI
 

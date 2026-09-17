@@ -36,6 +36,10 @@ class GameLogic
          */
         void update(const float &_deltaTime);
         /**
+         * @brief Calculates when the animations have to change sprite.
+         */
+        void updateAnimations();
+        /**
          * @brief Loads a level by the name.
          * 
          * @param levelName The name of the level
@@ -140,6 +144,10 @@ class GameLogic
         Player player;
         Tilemap tilemap;
         InputManager *input;
+
+        // Animations
+        float timePerFrame = 0.125f;
+        float timer = 0.0f;
 
         std::vector<TriggerZone> triggers;
         std::vector<std::vector<TriggerZone*>> triggerGrid;

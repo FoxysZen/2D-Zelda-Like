@@ -50,6 +50,39 @@ void Player::move(float dirX, float dirY, float deltaTime)
     }
 }
 
+void Player::updateSprite()
+{
+    ++animationFrame;
+
+    int maxFrames = 1;
+    
+    if (state == PlayerStateMachine::WALKING)
+    {
+        maxFrames = WALK_FRAMES;
+    }
+    else if (state == PlayerStateMachine::IDLE)
+    {
+        maxFrames = IDLE_FRAMES;
+    }
+
+    if (animationFrame >= maxFrames)
+    {
+        animationFrame = 0;
+    }
+}
+
+bool Player::isLookingLeft() const
+{
+    bool left = false;
+
+    if (direction == Direction::LEFT)
+    {
+        left = true;
+    }
+
+    return left;
+}
+
 const SDL_Rect *Player::getPosition() const
 {
     return &position;
@@ -60,9 +93,33 @@ const SDL_Rect *Player::getColision() const
     return &colision;
 }
 
-const SDL_Rect *Player::getSpritePos() const
+const SDL_Rect Player::getSpritePos() const
 {
-    return &spritePos;
+    SDL_Rect pos = {0, 0, 0, 0};
+    int frames = 1;
+
+    if (state == PlayerStateMachine::WALKING)
+    {
+        pos = PLAYER_WALK;
+        frames = WALK_FRAMES;
+    }
+    else if (state == PlayerStateMachine::IDLE)
+    {
+        pos = PLAYER_IDLE;
+        frames = IDLE_FRAMES;
+    }
+
+    if (direction == Direction::LEFT || direction == Direction::RIGHT)
+    {
+        pos.x += 1 * SPRITE_SIZE * frames;
+    }
+    else if (direction == Direction::BACK)
+    {
+        pos.x += 2 * SPRITE_SIZE * frames;
+    }
+
+    pos.x += animationFrame * SPRITE_SIZE;
+    return pos;
 }
 
 std::string Player::getAtlasName() const
@@ -87,4 +144,18 @@ void Player::setPositionY(int _y)
 {
     position.y = _y;
     rawPosY = static_cast<float>(_y);
+}
+
+void Player::setState(PlayerStateMachine newState)
+{
+    if (state != newState)
+    {
+        state = newState;
+        animationFrame = 0;
+    }
+}
+
+void Player::setDirection(Direction newDir)
+{
+    direction = newDir;
 }

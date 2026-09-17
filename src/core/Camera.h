@@ -62,5 +62,5 @@ class Camera
         int screenWidth, screenHeight;
         int mapWidth, mapHeight;
 
-        float smoothFactor = 0.1f;
+        float smoothFactor = 1.0f;
 };
