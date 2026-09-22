@@ -27,7 +27,20 @@ class Tilemap
          * @return Pointer to the Matrix.
          */
         const MapData *getCurrentMap() const;
+        /**
+         * @brief Gets the index of the current animation frame.
+         * 
+         * @return int
+         */
+        int getAnimationFrameIndex() const;
+
+        /**
+         * @brief Updates the animations of each tile that have it.
+         */
+        void updateSprites();
 
     private:
         MapData currentMap;
+
+        int animationFrame = 0;
 };

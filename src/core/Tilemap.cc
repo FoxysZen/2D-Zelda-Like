@@ -20,3 +20,20 @@ const MapData *Tilemap::getCurrentMap() const
 {
     return &currentMap;
 }
+
+int Tilemap::getAnimationFrameIndex() const
+{
+    return animationFrame;
+}
+
+void Tilemap::updateSprites()
+{
+    ++animationFrame;
+
+    int maxFrames = 4;
+
+    if (animationFrame >= maxFrames)
+    {
+        animationFrame = 0;
+    }
+}

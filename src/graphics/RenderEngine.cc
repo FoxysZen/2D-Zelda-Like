@@ -79,6 +79,7 @@ void RenderEngine::render(GameLogic *game)
     SDL_RenderClear(renderer);
 
     const MapData *map = game->getTileMap()->getCurrentMap();
+    int animationFrame = game->getTileMap()->getAnimationFrameIndex();
     const int mapWidth = map->mapWidth;
     const int mapHeight = map->mapHeight;
     const int tileSize = map->tileSize;
@@ -114,9 +115,17 @@ void RenderEngine::render(GameLogic *game)
             // Base Tiles
             int tileId = map->worldMap[y * mapWidth + x];
 
+            int animate = 0;
+            switch (tileId) 
+            {
+                case 17:
+                    animate = 1;
+                break;
+            }
+
             // Tile position in the PNG
-            int i = tileId % tilesPerRow * tileSize;
-            int j = tileId / tilesPerRow * tileSize;
+            int i = (tileId + animationFrame * animate) % tilesPerRow * tileSize;
+            int j = (tileId + animationFrame * animate) / tilesPerRow * tileSize;
             SDL_Rect tileTexture = {i, j, tileSize, tileSize};
 
             // Tile position in the world space.
@@ -136,8 +145,8 @@ void RenderEngine::render(GameLogic *game)
             if (tileId != 0)
             {
                 // Tile position in the PNG
-                i = tileId % tilesPerRow * tileSize;
-                j = tileId / tilesPerRow * tileSize;
+                i = (tileId + animationFrame * animate) % tilesPerRow * tileSize;
+                j = (tileId + animationFrame * animate) / tilesPerRow * tileSize;
                 tileTexture  = {i, j, tileSize, tileSize};
                 
                 // Tile position in the world space can be reutilized.
@@ -150,10 +159,18 @@ void RenderEngine::render(GameLogic *game)
     // Render Objects
     for (const auto &data : map->objectMap)
     {
+        int animate = 0;
+        switch (data.id) 
+        {
+            case 17:
+                animate = 1;
+            break;
+        }
+
         // Tile position in the PNG
         SDL_Rect tileTexture = {
-            data.id % tilesPerRow * tileSize,
-            data.id / tilesPerRow * tileSize,
+            (data.id + animationFrame * animate) % tilesPerRow * tileSize,
+            (data.id + animationFrame * animate) / tilesPerRow * tileSize,
             16,
             16
         };

@@ -46,6 +46,7 @@ void GameLogic::updateAnimations()
     {
         timer = 0.0f;
         player.updateSprite();
+        tilemap.updateSprites();
     }
 }
 
