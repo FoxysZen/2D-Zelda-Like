@@ -17,6 +17,7 @@ sudo pacman -S base-devel sdl2 sdl2_image
 ```
 
 ## How to compile
+
 1. Compile the project:
 ```bash
 make
@@ -29,6 +30,10 @@ make
 ## Controls
 
 Movement: Arrow keys / WASD
+
+Interaction: E
+
+Attack: Space
 
 Quit: Esc
 
