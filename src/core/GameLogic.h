@@ -157,7 +157,7 @@ class GameLogic
         InputManager *input;
 
         // Animations
-        float bgRateAnimation = 0.125f;
+        float bgRateAnimation = 0.2f;
         float playerRateAnimation = 0.125f;
         float bgTimer = 0.0f;
         float playerTimer = 0.0f;
@@ -166,5 +166,5 @@ class GameLogic
         std::vector<std::vector<TriggerZone*>> triggerGrid;
 
         // Trigger tiles
-        const uint8_t BUSH_TILE = 54;
+        const uint8_t BUSH_TILE = 40;
 };

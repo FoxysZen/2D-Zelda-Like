@@ -116,11 +116,9 @@ void RenderEngine::render(GameLogic *game)
             int tileId = map->worldMap[y * mapWidth + x];
 
             int animate = 0;
-            switch (tileId) 
+            if (tileId == 6 || tileId == 22 || tileId == 10)
             {
-                case 17:
-                    animate = 0;
-                break;
+                animate = 1;
             }
 
             // Tile position in the PNG
