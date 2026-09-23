@@ -232,7 +232,10 @@ void RenderEngine::render(GameLogic *game)
         
         SDL_Color blue = { 0, 0, 255, 255 };
         SDL_Color green = { 0, 255, 0, 255 };
-        drawHitbox(swordWorldHitbox, *game->getCamera(), blue);
+        if (game->getPlayer()->isAttacking())
+        {
+            drawHitbox(swordWorldHitbox, *game->getCamera(), blue);
+        }
         drawHitbox(playerWorldHitbox, *game->getCamera(), green);
     }
 
