@@ -20,19 +20,19 @@ void Player::move(float dirX, float dirY, float deltaTime)
 {
     if (dirX != 0.0f || dirY != 0.0f)
     {
-        if (state != SWIMMING)
+        if (state != PlayerStateMachine::SWIMMING)
         {
-            state = WALKING;
+            setState(PlayerStateMachine::WALKING);;
         }
     }
     else
     {
-        state = IDLE;
+        setState(PlayerStateMachine::IDLE);
         return;
     }
 
     float actualSpeed = speed;
-    if (state == SWIMMING)
+    if (state == PlayerStateMachine::SWIMMING)
     {
         actualSpeed *= slowDown;
     }
@@ -64,6 +64,11 @@ void Player::updateSprite()
     {
         maxFrames = IDLE_FRAMES;
     }
+    else if (state == PlayerStateMachine::ATTACKING)
+    {
+        // +1 for isAttacking() so that it can enter the if
+        maxFrames = ATTACK_FRAMES + 1;
+    }
 
     if (animationFrame >= maxFrames)
     {
@@ -81,6 +86,18 @@ bool Player::isLookingLeft() const
     }
 
     return left;
+}
+
+bool Player::isAttacking() const
+{
+    bool attacking = false;
+
+    if (state == PlayerStateMachine::ATTACKING && animationFrame < ATTACK_FRAMES)
+    {
+        attacking = true;
+    }
+
+    return attacking;
 }
 
 const SDL_Rect *Player::getPosition() const
@@ -108,6 +125,11 @@ const SDL_Rect Player::getSpritePos() const
         pos = PLAYER_IDLE;
         frames = IDLE_FRAMES;
     }
+    else if (state == PlayerStateMachine::ATTACKING)
+    {
+        pos = PLAYER_ATTACK;
+        frames = ATTACK_FRAMES;
+    }
 
     if (direction == Direction::LEFT || direction == Direction::RIGHT)
     {
@@ -125,6 +147,70 @@ const SDL_Rect Player::getSpritePos() const
 std::string Player::getAtlasName() const
 {
     return currentAtlas;
+}
+
+const SDL_Rect Player::getSwordHitbox() const
+{
+    SDL_Rect swordHitbox;
+
+    const int footCenterX = 16; // 8 + 16/2 (colision x)
+    const int footCenterY = 28; // 24 + 8/2 (colision y)
+
+    switch (direction)
+    {
+        case Direction::FRONT:
+            swordHitbox.x = footCenterX - (attackThickness / 2);
+            swordHitbox.y = footCenterY;
+            swordHitbox.w = attackThickness;
+            swordHitbox.h = attackReach;
+            break;
+
+        case Direction::BACK:
+            swordHitbox.x = footCenterX - (attackThickness / 2);
+            swordHitbox.y = footCenterY - attackReach;
+            swordHitbox.w = attackThickness;
+            swordHitbox.h = attackReach;
+            break;
+
+        case Direction::LEFT:
+            swordHitbox.x = footCenterX - attackReach;
+            swordHitbox.y = footCenterY - (attackThickness / 2);
+            swordHitbox.w = attackReach;
+            swordHitbox.h = attackThickness;
+            break;
+
+        case Direction::RIGHT:
+            swordHitbox.x = footCenterX;
+            swordHitbox.y = footCenterY - (attackThickness / 2);
+            swordHitbox.w = attackReach;
+            swordHitbox.h = attackThickness;
+            break;
+    }
+
+    return swordHitbox;
+}
+
+float Player::getAnimationRate() const
+{
+    float rate = 0.125f;
+
+    switch (state)
+    {
+        case PlayerStateMachine::IDLE:
+            rate = 0.125f;
+            break;
+        case PlayerStateMachine::WALKING:
+            rate = 0.125f;
+            break;
+        case PlayerStateMachine::ATTACKING:
+            rate = 0.035f;
+            break;
+        default:
+            rate = 0.125f;
+            break;
+    }
+
+    return rate;
 }
 
 void Player::setPosition(const SDL_Rect &newPos)
@@ -150,6 +236,12 @@ void Player::setState(PlayerStateMachine newState)
 {
     if (state != newState)
     {
+        // No state change while attacking (Except death).
+        if (isAttacking())
+        {
+            return;
+        }
+
         state = newState;
         animationFrame = 0;
     }

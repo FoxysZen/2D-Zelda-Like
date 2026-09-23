@@ -40,13 +40,20 @@ void GameLogic::update(const float &_deltaTime)
 
 void GameLogic::updateAnimations()
 {
-    timer += deltaTime;
+    bgTimer += deltaTime;
+    playerTimer += deltaTime;
 
-    if (timer >= timePerFrame)
+    if (bgTimer >= bgRateAnimation)
     {
-        timer = 0.0f;
-        player.updateSprite();
+        bgTimer = 0.0f;
         tilemap.updateSprites();
+    }
+
+    float rate = player.getAnimationRate();
+    if (playerTimer >= rate)
+    {
+        playerTimer = 0.0f;
+        player.updateSprite();
     }
 }
 
@@ -134,7 +141,13 @@ void GameLogic::handlePlayerMovement(float dirX, float dirY)
         player.setState(PlayerStateMachine::IDLE);
         return;
     }
-    
+
+    if (player.isAttacking())
+    {
+        player.move(0.0f, 0.0f, deltaTime);
+        return;
+    }
+
     player.setState(PlayerStateMachine::WALKING);
 
     if (dirX > 0.0f)
@@ -239,7 +252,6 @@ void GameLogic::checkTriggerCollisions()
                         (playerWorldHitbox.y + playerWorldHitbox.h - 1) / tileSize);
 
     bool actionPressed = checkKeyPressed("action");
-    //bool attackPressed = checkKeyPressed("attack");
 
     std::unordered_set<TriggerZone*> checkedTriggers;
 
@@ -260,32 +272,45 @@ void GameLogic::checkTriggerCollisions()
         }
     }
 
-    //if (attackPressed)
-    //{
-    //    SDL_Rect swordHitbox = player.getSwordHitbox(); 
-//
-    //    int sStartX = std::max(0, swordHitbox.x / tileSize);
-    //    int sStartY = std::max(0, swordHitbox.y / tileSize);
-    //    int sEndX   = std::min(mapWidth - 1, 
-    //                           (swordHitbox.x + swordHitbox.w - 1) / tileSize);
-    //    int sEndY   = std::min(mapHeight - 1, 
-    //                           (swordHitbox.y + swordHitbox.h - 1) / tileSize);
-//
-    //    for (int y = sStartY; y <= sEndY; ++y) 
-    //    {
-    //        for (int x = sStartX; x <= sEndX; ++x) 
-    //        {
-    //            int index = y * mapWidth + x;
-    //            for (TriggerZone *trigger : triggerGrid[index]) 
-    //            {
-    //                if (checkedTriggers.insert(trigger).second) 
-    //                {
-    //                    trigger->checkColisions(swordHitbox, false, true);
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
+    if (checkKeyPressed("attack"))
+    {
+        player.setState(PlayerStateMachine::ATTACKING);
+    }
+
+    if (player.isAttacking())
+    {
+
+        const SDL_Rect swordHitbox = player.getSwordHitbox(); 
+
+        SDL_Rect swordWordlHitbox = {
+            playerPos->x + swordHitbox.x,
+            playerPos->y + swordHitbox.y,
+            swordHitbox.w,
+            swordHitbox.h
+        };
+
+        int sStartX = std::max(0, swordWordlHitbox.x / tileSize);
+        int sStartY = std::max(0, swordWordlHitbox.y / tileSize);
+        int sEndX   = std::min(mapWidth - 1, 
+                               (swordWordlHitbox.x + swordWordlHitbox.w - 1) / tileSize);
+        int sEndY   = std::min(mapHeight - 1, 
+                               (swordWordlHitbox.y + swordWordlHitbox.h - 1) / tileSize);
+
+        for (int y = sStartY; y <= sEndY; ++y)
+        {
+            for (int x = sStartX; x <= sEndX; ++x)
+            {
+                int index = y * mapWidth + x;
+                for (TriggerZone *trigger : triggerGrid[index])
+                {
+                    if (checkedTriggers.insert(trigger).second)
+                    {
+                        trigger->checkColisions(swordWordlHitbox, false, true);
+                    }
+                }
+            }
+        }
+    }
 }
 
 bool GameLogic::checkKeyPressed(const std::string &action)
@@ -366,6 +391,9 @@ TriggerZone GameLogic::createBushTrigger(int i, int width, int tileSize,
         //action = []() {
         //    drawParticle(...);
         //};
+        action = [this]() {
+            showMessage("Bush Cut!");
+        };
     }
     else
     {

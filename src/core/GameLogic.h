@@ -45,6 +45,10 @@ class GameLogic
          * @param levelName The name of the level
          */
         void loadLevel(const std::string &levelName);
+        /**
+         * @brief Sets the player state in PlayerStateMachine::ATTACKING
+         */
+        void startAttack();
 
         /**
          * @brief Gets the pointer to the Player object.
@@ -146,12 +150,14 @@ class GameLogic
         InputManager *input;
 
         // Animations
-        float timePerFrame = 0.125f;
-        float timer = 0.0f;
+        float bgRateAnimation = 0.125f;
+        float playerRateAnimation = 0.125f;
+        float bgTimer = 0.0f;
+        float playerTimer = 0.0f;
 
         std::vector<TriggerZone> triggers;
         std::vector<std::vector<TriggerZone*>> triggerGrid;
 
         // Trigger tiles
-        const uint8_t BUSH_TILE = 20;
+        const uint8_t BUSH_TILE = 54;
 };

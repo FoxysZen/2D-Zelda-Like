@@ -119,7 +119,7 @@ void RenderEngine::render(GameLogic *game)
             switch (tileId) 
             {
                 case 17:
-                    animate = 1;
+                    animate = 0;
                 break;
             }
 
@@ -198,8 +198,8 @@ void RenderEngine::render(GameLogic *game)
     SDL_Rect playerPos = *rawPlayerPos;
     playerPos.x = (rawPlayerPos->x - viewPort.x) * scale;
     playerPos.y = (rawPlayerPos->y - viewPort.y) * scale;
-    playerPos.h *= scale;
     playerPos.w *= scale;
+    playerPos.h *= scale;
 
     SDL_RendererFlip flip = SDL_FLIP_NONE;
     if (left)
@@ -210,8 +210,52 @@ void RenderEngine::render(GameLogic *game)
     SDL_RenderCopyEx(renderer, atlases[playerAtlas], &playerSprite, &playerPos, 
                      0.0, nullptr, flip);
 
+    // Render Debug
+    const SDL_Rect swordHitbox = game->getPlayer()->getSwordHitbox();
+    const SDL_Rect *playerCol  = game->getPlayer()->getColision();
+
+    SDL_Rect swordWorldHitbox = {
+        rawPlayerPos->x + swordHitbox.x,
+        rawPlayerPos->y + swordHitbox.y,
+        swordHitbox.w,
+        swordHitbox.h
+    };
+
+    SDL_Rect playerWorldHitbox = {
+        rawPlayerPos->x + playerCol->x,
+        rawPlayerPos->y + playerCol->y,
+        playerCol->w,
+        playerCol->h
+    };
+
+    SDL_Color blue = { 0, 0, 255, 255 };
+    SDL_Color green = { 0, 255, 0, 255 };
+    drawHitbox(swordWorldHitbox, *game->getCamera(), blue);
+    drawHitbox(playerWorldHitbox, *game->getCamera(), green);
+
     // Render UI
 
     // Updates the Render
     SDL_RenderPresent(renderer);
+}
+
+void RenderEngine::drawHitbox(const SDL_Rect &worldHitbox, 
+                              const Camera &camera, SDL_Color color)
+{
+    const SDL_Rect& cameraViewport = camera.getViewPort();
+
+    SDL_Rect screenHitbox = {
+        (worldHitbox.x - cameraViewport.x) * scale,
+        (worldHitbox.y - cameraViewport.y) * scale,
+        worldHitbox.w * scale,
+        worldHitbox.h * scale
+    };
+
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 100);
+    SDL_RenderFillRect(renderer, &screenHitbox);
+
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
+    SDL_RenderDrawRect(renderer, &screenHitbox);
 }

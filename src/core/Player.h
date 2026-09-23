@@ -63,6 +63,12 @@ class Player
          * @return true if the direction of the player is Direction::LEFT, otherwise false.
          */
         bool isLookingLeft() const;
+        /**
+         * @brief Returns if the player is attacking.
+         * 
+         * @return true if PlayerStateMachine::ATTACKING.
+         */
+        bool isAttacking() const;
 
         /**
          * @brief Gets the current world position of the player.
@@ -88,6 +94,18 @@ class Player
          * @return Constant pointer to the std:string.
          */
         std::string getAtlasName() const;
+        /**
+         * @brief Get the Sword Hitbox
+         * 
+         * @return Constant SDL_Rect
+         */
+        const SDL_Rect getSwordHitbox() const;
+        /**
+         * @brief Gets the current animation rate for the player.
+         * 
+         * @return float 
+         */
+        float getAnimationRate() const;
 
         /**
          * @brief Sets the new world position of the player.
@@ -123,7 +141,9 @@ class Player
     private:
         SDL_Rect spritePos;
         SDL_Rect position = {32, 32, 32, 32};
-        SDL_Rect colision = { 8, 24,  16,  8};
+        SDL_Rect colision = { 8, 24, 16,  8};
+        int attackReach = 16;
+        int attackThickness = 32;
         float rawPosX = 32.0f, rawPosY = 32.0f;
         float subX = 0.0f, subY = 0.0f;
         float speed = 90.0f; // px/s
@@ -141,7 +161,9 @@ class Player
 
         const SDL_Rect PLAYER_IDLE = { 0, 32, 32, 32 };
         const SDL_Rect PLAYER_WALK = { 0, 64, 32, 32 };
+        const SDL_Rect PLAYER_ATTACK = { 0, 96, 32, 32 };
 
         const uint8_t IDLE_FRAMES = 4;
         const uint8_t WALK_FRAMES = 4;
+        const uint8_t ATTACK_FRAMES = 6;
 };

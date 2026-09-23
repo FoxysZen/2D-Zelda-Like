@@ -51,6 +51,15 @@ class RenderEngine
         void render(GameLogic *game);
 
     private:
+        /**
+         * @brief Draws the hitbox of a SDL_Rect with a specific colo.
+         * 
+         * @param worldHitbox The hitbox to be drawn.
+         * @param camera      The Camera object.
+         * @param color       A SDL_Color.
+         */
+        void drawHitbox(const SDL_Rect &worldHitbox, const Camera &camera, 
+                        SDL_Color color);
         SDL_Window *window;
         SDL_Renderer *renderer;
 
