@@ -36,6 +36,11 @@ void GameLogic::update(const float &_deltaTime)
     camera.update(*player.getPosition());
 
     updateAnimations();
+
+    if (checkKeyPressed("debug"))
+    {
+        debugMode = !debugMode;
+    }
 }
 
 void GameLogic::updateAnimations()
@@ -119,6 +124,11 @@ const Camera *GameLogic::getCamera()
 bool GameLogic::isRunning() const
 {
     return running;
+}
+
+bool GameLogic::isInDebugMode() const
+{
+    return debugMode;
 }
 
 void GameLogic::setRunning(bool value)
@@ -322,6 +332,10 @@ bool GameLogic::checkKeyPressed(const std::string &action)
         isPressed = true;
     }
     else if (action == "attack" && input->isKeyPressed(SDL_SCANCODE_SPACE))
+    {
+        isPressed = true;
+    }
+    else if (action == "debug" && input->isKeyPressed(SDL_SCANCODE_F3))
     {
         isPressed = true;
     }

@@ -76,6 +76,12 @@ class GameLogic
          */
         bool isRunning() const;
         /**
+         * @brief Checks if the game is in debug mode.
+         * 
+         * @return True if debugMode is true.
+         */
+        bool isInDebugMode() const;
+        /**
          * @brief Sets the game running status to control the main loop.
          * 
          * @param value True to keep the loop active, false to signal game exit.
@@ -138,6 +144,7 @@ class GameLogic
         void showMessage(const std::string &msg);
 
         bool running;
+        bool debugMode = false;
         int scale = 1;
         float deltaTime;
 

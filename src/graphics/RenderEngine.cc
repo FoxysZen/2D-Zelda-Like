@@ -211,27 +211,30 @@ void RenderEngine::render(GameLogic *game)
                      0.0, nullptr, flip);
 
     // Render Debug
-    const SDL_Rect swordHitbox = game->getPlayer()->getSwordHitbox();
-    const SDL_Rect *playerCol  = game->getPlayer()->getColision();
-
-    SDL_Rect swordWorldHitbox = {
-        rawPlayerPos->x + swordHitbox.x,
-        rawPlayerPos->y + swordHitbox.y,
-        swordHitbox.w,
-        swordHitbox.h
-    };
-
-    SDL_Rect playerWorldHitbox = {
-        rawPlayerPos->x + playerCol->x,
-        rawPlayerPos->y + playerCol->y,
-        playerCol->w,
-        playerCol->h
-    };
-
-    SDL_Color blue = { 0, 0, 255, 255 };
-    SDL_Color green = { 0, 255, 0, 255 };
-    drawHitbox(swordWorldHitbox, *game->getCamera(), blue);
-    drawHitbox(playerWorldHitbox, *game->getCamera(), green);
+    if (game->isInDebugMode())
+    {
+        const SDL_Rect swordHitbox = game->getPlayer()->getSwordHitbox();
+        const SDL_Rect *playerCol  = game->getPlayer()->getColision();
+        
+        SDL_Rect swordWorldHitbox = {
+            rawPlayerPos->x + swordHitbox.x,
+            rawPlayerPos->y + swordHitbox.y,
+            swordHitbox.w,
+            swordHitbox.h
+        };
+        
+        SDL_Rect playerWorldHitbox = {
+            rawPlayerPos->x + playerCol->x,
+            rawPlayerPos->y + playerCol->y,
+            playerCol->w,
+            playerCol->h
+        };
+        
+        SDL_Color blue = { 0, 0, 255, 255 };
+        SDL_Color green = { 0, 255, 0, 255 };
+        drawHitbox(swordWorldHitbox, *game->getCamera(), blue);
+        drawHitbox(playerWorldHitbox, *game->getCamera(), green);
+    }
 
     // Render UI
 
