@@ -30,9 +30,11 @@ class Tilemap
         /**
          * @brief Gets the index of the current animation frame.
          * 
+         * @param True if its a 2 animation tile, false if its a 4 animation.
+         * 
          * @return int
          */
-        int getAnimationFrameIndex() const;
+        int getAnimationFrameIndex(bool single) const;
 
         /**
          * @brief Updates the animations of each tile that have it.
@@ -43,4 +45,6 @@ class Tilemap
         MapData currentMap;
 
         int animationFrame = 0;
+        int animationDoubleFrame = 0;
+        const int maxFrames = 2;
 };

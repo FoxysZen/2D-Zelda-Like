@@ -39,7 +39,7 @@ struct TriggerData
  */
 struct ObjectData
 {
-    uint8_t id = 0;
+    uint8_t tileId = 0;
     SDL_Rect position { 0, 0, 0, 0 };
 
     bool enabled = true;

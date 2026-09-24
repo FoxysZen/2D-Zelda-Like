@@ -1,5 +1,7 @@
 #include "RenderEngine.h"
 #include <SDL2/SDL_rect.h>
+#include <SDL2/SDL_stdinc.h>
+#include <ostream>
 #include <utility>
 
 RenderEngine::RenderEngine() {}
@@ -81,7 +83,6 @@ void RenderEngine::render(GameLogic *game)
     SDL_RenderClear(renderer);
 
     const MapData *map = game->getTileMap()->getCurrentMap();
-    int animationFrame = game->getTileMap()->getAnimationFrameIndex();
     const int mapWidth = map->mapWidth;
     const int mapHeight = map->mapHeight;
     const int tileSize = map->tileSize;
@@ -115,14 +116,13 @@ void RenderEngine::render(GameLogic *game)
         for (int x = startX; x < endX; ++x)
         {
             // Base Tiles
-            int tileId = map->worldMap[y * mapWidth + x];
+            uint8_t tileId = map->worldMap[y * mapWidth + x];
 
-            int animate = 0;
-            if (tileId == 6 || tileId == 22 || tileId == 10)
-            {
-                animate = 1;
-            }
+            int animate = hasAnimation(tileId);
 
+            int animationFrame = 
+                game->getTileMap()->getAnimationFrameIndex(is2FrameAnimation(tileId));
+            
             // Tile position in the PNG
             int i = (tileId + animationFrame * animate) % tilesPerRow * tileSize;
             int j = (tileId + animationFrame * animate) / tilesPerRow * tileSize;
@@ -159,18 +159,15 @@ void RenderEngine::render(GameLogic *game)
     // Render Objects
     for (const auto &data : map->objectMap)
     {
-        int animate = 0;
-        switch (data.id) 
-        {
-            case 17:
-                animate = 1;
-            break;
-        }
+        int animate = hasAnimation(data.tileId);
+
+        int animationFrame = 
+            game->getTileMap()->getAnimationFrameIndex(is2FrameAnimation(data.tileId));
 
         // Tile position in the PNG
         SDL_Rect tileTexture = {
-            (data.id + animationFrame * animate) % tilesPerRow * tileSize,
-            (data.id + animationFrame * animate) / tilesPerRow * tileSize,
+            (data.tileId + animationFrame * animate) % tilesPerRow * tileSize,
+            (data.tileId + animationFrame * animate) / tilesPerRow * tileSize,
             16,
             16
         };
@@ -267,7 +264,7 @@ void RenderEngine::render(GameLogic *game)
 }
 
 void RenderEngine::drawHitbox(const SDL_Rect &worldHitbox, 
-                              const Camera &camera, SDL_Color color)
+                              const Camera &camera, SDL_Color color) const
 {
     const SDL_Rect& cameraViewport = camera.getViewPort();
 
@@ -285,4 +282,59 @@ void RenderEngine::drawHitbox(const SDL_Rect &worldHitbox,
 
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
     SDL_RenderDrawRect(renderer, &screenHitbox);
+}
+
+bool RenderEngine::is2FrameAnimation(uint8_t tileId) const
+{
+    bool single = true;
+
+    switch (tileId)
+    {
+        case blueFlower:
+        case whiteFlower:
+        case redMushroom:
+            single = false;
+            break;
+        default:
+            single = true;
+            break;
+    }
+
+    return single;
+}
+
+int RenderEngine::hasAnimation(uint8_t tileId) const
+{
+    bool animated = false;
+
+    switch (tileId)
+    {
+        case waterFull:
+
+        case waterInsideCornerUL:
+        case waterInsideCornerDL:
+        case waterInsideCornerUR:
+        case waterInsideCornerDR:
+
+        case waterOutsideCornerUL:
+        case waterOutsideCornerDL:
+        case waterOutsideCornerUR:
+        case waterOutsideCornerDR:
+
+        case waterSideU:
+        case waterSideL:
+        case waterSideR:
+        case waterSideD:
+
+        case blueFlower:
+        case whiteFlower:
+        case redMushroom:
+            animated = true;
+            break;
+        default:
+            animated = false;
+            break;
+    }
+
+    return animated;
 }

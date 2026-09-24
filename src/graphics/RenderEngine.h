@@ -59,7 +59,22 @@ class RenderEngine
          * @param color       A SDL_Color.
          */
         void drawHitbox(const SDL_Rect &worldHitbox, const Camera &camera, 
-                        SDL_Color color);
+                        SDL_Color color) const;
+        /**
+         * @brief Checks if the tile is a 2 frame animation or a 4 one.
+         * 
+         * @param tileId The id of the tile to check.
+         * @return True if the tile is 2 frame animation, otherwise false.
+         */
+        bool is2FrameAnimation(uint8_t tileId) const;
+        /**
+         * @brief Checks if the tile has animation.
+         * 
+         * @param tileId The id of the tile.
+         * @return int 1 if has animation, otherwise 0.
+         */
+        int hasAnimation(uint8_t tileId) const;
+        
         SDL_Window *window;
         SDL_Renderer *renderer;
 
@@ -67,4 +82,28 @@ class RenderEngine
         int screenWidth, screenHeight;
 
         std::unordered_map<std::string, SDL_Texture*> atlases;
+
+        // Tile IDs
+        // Water tile
+        static constexpr uint8_t waterFull = 230;
+        // Water inside
+        static constexpr uint8_t waterInsideCornerUL = 224;
+        static constexpr uint8_t waterInsideCornerDL = 240;
+        static constexpr uint8_t waterInsideCornerUR = 226;
+        static constexpr uint8_t waterInsideCornerDR = 242;
+        // Water outside
+        static constexpr uint8_t waterOutsideCornerUL = 212;
+        static constexpr uint8_t waterOutsideCornerDL = 244;
+        static constexpr uint8_t waterOutsideCornerUR = 216;
+        static constexpr uint8_t waterOutsideCornerDR = 248;
+        // Water sides
+        static constexpr uint8_t waterSideU = 214;
+        static constexpr uint8_t waterSideL = 228;
+        static constexpr uint8_t waterSideR = 232;
+        static constexpr uint8_t waterSideD = 246;
+
+        // Flora
+        static constexpr uint8_t blueFlower  = 6;
+        static constexpr uint8_t whiteFlower = 22;
+        static constexpr uint8_t redMushroom = 10;
 };

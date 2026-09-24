@@ -21,19 +21,34 @@ const MapData *Tilemap::getCurrentMap() const
     return &currentMap;
 }
 
-int Tilemap::getAnimationFrameIndex() const
+int Tilemap::getAnimationFrameIndex(bool single) const
 {
-    return animationFrame;
+    int frame = 0;
+
+    if (single)
+    {
+        frame = animationFrame;
+    }
+    else
+    {
+        frame = animationDoubleFrame;
+    }
+
+    return frame;
 }
 
 void Tilemap::updateSprites()
 {
     ++animationFrame;
-
-    int maxFrames = 4;
+    ++animationDoubleFrame;
 
     if (animationFrame >= maxFrames)
     {
         animationFrame = 0;
+    }
+
+    if (animationDoubleFrame >= (maxFrames * 2))
+    {
+        animationDoubleFrame = 0;
     }
 }
