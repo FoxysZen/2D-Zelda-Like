@@ -2,6 +2,8 @@
 #include <SDL2/SDL_rect.h>
 #include <cstdint>
 #include <string>
+#include <utility>
+#include <vector>
 
 /**
  * @brief Indicates the direction the player is looking at.
@@ -106,6 +108,18 @@ class Player
          * @return float 
          */
         float getAnimationRate() const;
+        /**
+         * @brief Gets the Sword Sprite Offset for a direction and a frame.
+         * 
+         * @return Constant pointer to a std::pair<int, int>
+         */
+        const std::pair<int, int> *getSwordSpriteOffset() const;
+        /**
+         * @brief Gets the size of the sprites of the player.
+         * 
+         * @return int
+         */
+        int getSpriteSize() const;
 
         /**
          * @brief Sets the new world position of the player.
@@ -142,12 +156,24 @@ class Player
         SDL_Rect spritePos;
         SDL_Rect position = {32, 32, 32, 32};
         SDL_Rect colision = { 8, 24, 16,  8};
-        int attackReach = 16;
-        int attackThickness = 32;
         float rawPosX = 32.0f, rawPosY = 32.0f;
         float subX = 0.0f, subY = 0.0f;
         float speed = 90.0f; // px/s
         float slowDown = 0.75f;
+        
+        // Attack
+        int attackReach = 16;
+        int attackThickness = 32;
+        std::vector<std::pair<int, int>> swordSpriteOffsetFront = {
+            { -12,  0 },
+            { -10,  9 },
+            {  -5, 11 },
+            {   1, 13 },
+            {  14, 10 },
+            {  13, 10 },
+            {  16,  9 },
+            {  14,  4 },
+        };
 
         int animationFrame = 0;
 

@@ -213,6 +213,33 @@ float Player::getAnimationRate() const
     return rate;
 }
 
+const std::pair<int, int> *Player::getSwordSpriteOffset() const
+{
+    const std::pair<int, int> *offset;
+
+    if (direction == Direction::FRONT)
+    {
+        offset = &swordSpriteOffsetFront[animationFrame];
+    }
+    else if (direction == Direction::LEFT || direction == Direction::RIGHT)
+    {
+        offset = &swordSpriteOffsetFront[animationFrame];
+        //offset = &swordSpriteOffsetSide[animationFrame];
+    }
+    else if (direction == Direction::BACK)
+    {
+        offset = &swordSpriteOffsetFront[animationFrame];
+        //offset = &swordSpriteOffsetBack[animationFrame];
+    }
+
+    return offset;
+}
+
+int Player::getSpriteSize() const
+{
+    return SPRITE_SIZE;
+}
+
 void Player::setPosition(const SDL_Rect &newPos)
 {
     position = newPos;

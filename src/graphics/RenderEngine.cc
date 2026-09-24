@@ -1,4 +1,6 @@
 #include "RenderEngine.h"
+#include <SDL2/SDL_rect.h>
+#include <utility>
 
 RenderEngine::RenderEngine() {}
 RenderEngine::~RenderEngine() {}
@@ -188,10 +190,11 @@ void RenderEngine::render(GameLogic *game)
     // Render Enemies
 
     // Renders the player
-    const SDL_Rect playerSprite = game->getPlayer()->getSpritePos();
-    const SDL_Rect *rawPlayerPos = game->getPlayer()->getPosition();
-    const std::string playerAtlas = game->getPlayer()->getAtlasName();
-    bool left = game->getPlayer()->isLookingLeft();
+    const Player *player = game->getPlayer();
+    const SDL_Rect playerSprite = player->getSpritePos();
+    const SDL_Rect *rawPlayerPos = player->getPosition();
+    const std::string playerAtlas = player->getAtlasName();
+    bool left = player->isLookingLeft();
 
     SDL_Rect playerPos = *rawPlayerPos;
     playerPos.x = (rawPlayerPos->x - viewPort.x) * scale;
@@ -208,11 +211,31 @@ void RenderEngine::render(GameLogic *game)
     SDL_RenderCopyEx(renderer, atlases[playerAtlas], &playerSprite, &playerPos, 
                      0.0, nullptr, flip);
 
+    // Renders the weapon
+    if (player->isAttacking())
+    {
+        const std::pair<int, int> *offset = player->getSwordSpriteOffset();
+        int spriteSize = player->getSpriteSize();
+
+        // Sword position relative to the player to world pos.
+        SDL_Rect swordPos;
+        swordPos.x = (rawPlayerPos->x + offset->first - viewPort.x) * scale;
+        swordPos.y = (rawPlayerPos->y + offset->second - viewPort.y) * scale;
+        swordPos.w = spriteSize * scale;
+        swordPos.h = spriteSize * scale;
+
+        SDL_Rect swordSprite = playerSprite;
+        swordSprite.y += spriteSize;
+
+        SDL_RenderCopyEx(renderer, atlases[playerAtlas], &swordSprite, 
+                         &swordPos, 0.0, nullptr, flip);
+    }
+
     // Render Debug
     if (game->isInDebugMode())
     {
-        const SDL_Rect swordHitbox = game->getPlayer()->getSwordHitbox();
-        const SDL_Rect *playerCol  = game->getPlayer()->getColision();
+        const SDL_Rect swordHitbox = player->getSwordHitbox();
+        const SDL_Rect *playerCol  = player->getColision();
         
         SDL_Rect swordWorldHitbox = {
             rawPlayerPos->x + swordHitbox.x,
@@ -230,7 +253,7 @@ void RenderEngine::render(GameLogic *game)
         
         SDL_Color blue = { 0, 0, 255, 255 };
         SDL_Color green = { 0, 255, 0, 255 };
-        if (game->getPlayer()->isAttacking())
+        if (player->isAttacking())
         {
             drawHitbox(swordWorldHitbox, *game->getCamera(), blue);
         }
