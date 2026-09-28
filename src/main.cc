@@ -2,6 +2,8 @@
 #include "graphics/RenderEngine.h"
 #include "input/InputManager.h"
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_scancode.h>
+#include <iostream>
 
 const int SCALE = 4;
 const int SCREEN_WIDTH = 240;
@@ -25,6 +27,9 @@ int main (int argc, char *argv[])
     renderer.loadTexture(game.getTileMap()->getCurrentMap()->atlas);
 
     Uint64 lastStart = SDL_GetTicks64();
+
+    bool debugFrames = false;
+    bool stepNextFrame = false;
     
     while (game.isRunning())
     {
@@ -35,6 +40,47 @@ int main (int argc, char *argv[])
 
         inputManager.processEvents(&game);
 
+#ifndef DEBUG_MODE
+        if (inputManager.isKeyPressed(SDL_SCANCODE_0))
+        {
+            debugFrames = !debugFrames;
+            if (debugFrames)
+            {
+                std::cout << "[DEBUG] Stop time!" << std::endl;
+            }
+            else
+            {
+                std::cout << "[DEBUG] Resume time!" << std::endl;
+            }
+        }
+        
+        if (debugFrames && inputManager.isKeyPressed(SDL_SCANCODE_9))
+        {
+            stepNextFrame = true;
+            std::cout << "[DEBUG] Frame step..." << std::endl;
+        }
+
+        if (!debugFrames)
+        {
+            game.update(deltaTime);
+        }
+        else if (stepNextFrame)
+        {
+            const float fixedDeltaTime = 1.0f / TARGET_FPS;
+            game.update(fixedDeltaTime);
+            
+            stepNextFrame = false; 
+        }
+
+        renderer.render(&game);
+
+        Uint32 frameTime = SDL_GetTicks64() - frameStart;
+        if (FRAME_DELAY > frameTime)
+        {
+            SDL_Delay(FRAME_DELAY - frameTime);
+        }
+#endif
+/*
         game.update(deltaTime);
         
         renderer.render(&game);
@@ -45,6 +91,7 @@ int main (int argc, char *argv[])
         {
             SDL_Delay(FRAME_DELAY - frameTime);
         }
+*/
     }
 
     renderer.quit();

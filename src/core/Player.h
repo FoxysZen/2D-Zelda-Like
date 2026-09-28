@@ -169,10 +169,20 @@ class Player
             { -10,  9 },
             {  -5, 11 },
             {   1, 13 },
-            {  14, 10 },
-            {  13, 10 },
+            {  11, 14 },
+            {  13, 14 },
             {  16,  9 },
             {  14,  4 },
+        };
+        std::vector<std::pair<int, int>> swordSpriteOffsetSide = {
+            {  4, 14 },
+            {  5, 13 },
+            { 13, 14 },
+            { 15,  7 },
+            { 14,  0 },
+            { 13,  0 },
+            { 10, -5 },
+            {  7, -5 },
         };
 
         int animationFrame = 0;
@@ -191,5 +201,5 @@ class Player
 
         const uint8_t IDLE_FRAMES = 4;
         const uint8_t WALK_FRAMES = 4;
-        const uint8_t ATTACK_FRAMES = 6;
+        const uint8_t ATTACK_FRAMES = 8;
 };

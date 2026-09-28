@@ -223,8 +223,7 @@ const std::pair<int, int> *Player::getSwordSpriteOffset() const
     }
     else if (direction == Direction::LEFT || direction == Direction::RIGHT)
     {
-        offset = &swordSpriteOffsetFront[animationFrame];
-        //offset = &swordSpriteOffsetSide[animationFrame];
+        offset = &swordSpriteOffsetSide[animationFrame];
     }
     else if (direction == Direction::BACK)
     {
