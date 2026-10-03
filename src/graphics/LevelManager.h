@@ -70,10 +70,8 @@ struct MapData
 class LevelManager
 {
     public:
-        static MapData getTestMap()
+        static MapData getTestMap(MapData &level)
         {
-            MapData level;
-
             level.atlas = "assets/testWorldAtlas.png";
 
             level.mapWidth = 30;

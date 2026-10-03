@@ -8,7 +8,7 @@ void Tilemap::loadTileMap(const std::string &name)
 {
     if (name == "test")
     {
-        currentMap = LevelManager::getTestMap();
+        LevelManager::getTestMap(currentMap);
     }
     else
     {
@@ -17,6 +17,11 @@ void Tilemap::loadTileMap(const std::string &name)
 }
 
 const MapData *Tilemap::getCurrentMap() const
+{
+    return &currentMap;
+}
+
+MapData *Tilemap::getCurrentMapMutable()
 {
     return &currentMap;
 }

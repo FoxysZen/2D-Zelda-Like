@@ -68,6 +68,12 @@ class GameLogic
          * @return Constant pointer to the Camera.
          */
         const Camera *getCamera();
+        /**
+         * @brief Gets the vector of objects of the current map.
+         * 
+         * @return const std::vector<TriggerZone>*
+         */
+        const std::vector<TriggerZone> *getObjectMap() const;
 
         /**
          * @brief Checks if the main loop is currently active.

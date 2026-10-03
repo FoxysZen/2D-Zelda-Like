@@ -28,6 +28,12 @@ class Tilemap
          */
         const MapData *getCurrentMap() const;
         /**
+         * @brief Gets the World Map Mutable
+         * 
+         * @return MapData* 
+         */
+        MapData *getCurrentMapMutable();
+        /**
          * @brief Gets the index of the current animation frame.
          * 
          * @param True if its a 2 animation tile, false if its a 4 animation.

@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cstddef>
 #include "../core/GameLogic.h"
+#include <cstdint>
 #include <iostream>
 #include "LevelManager.h"
 #include <ostream>
@@ -106,4 +107,6 @@ class RenderEngine
         static constexpr uint8_t blueFlower  = 6;
         static constexpr uint8_t whiteFlower = 22;
         static constexpr uint8_t redMushroom = 10;
+        static constexpr uint8_t bush = 40;
+        static constexpr uint8_t cutBush = 41;
 };

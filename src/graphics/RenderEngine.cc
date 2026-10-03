@@ -1,6 +1,7 @@
 #include "RenderEngine.h"
 #include <SDL2/SDL_rect.h>
 #include <SDL2/SDL_stdinc.h>
+#include <cstdint>
 #include <ostream>
 #include <utility>
 
@@ -142,11 +143,15 @@ void RenderEngine::render(GameLogic *game)
 
             // Decoration Tiles
             tileId = map->decorationMap[y * mapWidth + x];
+            animate = hasAnimation(tileId);
+            animationFrame = 
+                game->getTileMap()->getAnimationFrameIndex(is2FrameAnimation(tileId));
+            
             if (tileId != 0)
-            {
+            {                
                 // Tile position in the PNG
-                i = (tileId + animationFrame * animate) % tilesPerRow * tileSize;
-                j = (tileId + animationFrame * animate) / tilesPerRow * tileSize;
+                i = ((tileId + animationFrame * animate) % tilesPerRow) * tileSize;
+                j = ((tileId + animationFrame * animate) / tilesPerRow) * tileSize;
                 tileTexture  = {i, j, tileSize, tileSize};
                 
                 // Tile position in the world space can be reutilized.
@@ -157,27 +162,34 @@ void RenderEngine::render(GameLogic *game)
     }
 
     // Render Objects
-    for (const auto &data : map->objectMap)
+    const std::vector<TriggerZone> *objectMap = game->getObjectMap();
+    for (const auto &data : *objectMap)
     {
-        int animate = hasAnimation(data.tileId);
+        if (!data.isEnabled()) continue;
+        
+        uint8_t tileId = data.getTileId();
+        if (tileId == bush || tileId == cutBush) continue;
+        
+        int animate = hasAnimation(tileId);
 
         int animationFrame = 
-            game->getTileMap()->getAnimationFrameIndex(is2FrameAnimation(data.tileId));
+            game->getTileMap()->getAnimationFrameIndex(is2FrameAnimation(tileId));
 
         // Tile position in the PNG
         SDL_Rect tileTexture = {
-            (data.tileId + animationFrame * animate) % tilesPerRow * tileSize,
-            (data.tileId + animationFrame * animate) / tilesPerRow * tileSize,
+            (tileId + animationFrame * animate) % tilesPerRow * tileSize,
+            (tileId + animationFrame * animate) / tilesPerRow * tileSize,
             16,
             16
         };
 
         // Tile position in the world space.
+        const SDL_Rect *position = data.getPosition();
         SDL_Rect tilePos = {
-            (data.position.x - viewPort.x) * scale,
-            (data.position.y - viewPort.y) * scale,
-            data.position.w * scale,
-            data.position.h * scale
+            (position->x - viewPort.x) * scale,
+            (position->y - viewPort.y) * scale,
+            position->w * scale,
+            position->h * scale
         };
 
         // TODO: change the atlas to the objetAtlas

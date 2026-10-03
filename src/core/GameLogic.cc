@@ -77,6 +77,7 @@ void GameLogic::loadLevel(const std::string &levelName)
     {
         if (tile == BUSH_TILE)
         {
+            // 2 triggers per bush
             bushCount += 2;
         }
     }
@@ -119,6 +120,11 @@ const Tilemap *GameLogic::getTileMap()
 const Camera *GameLogic::getCamera()
 {
     return &camera;
+}
+
+const std::vector<TriggerZone> *GameLogic::getObjectMap() const
+{
+    return &triggers;
 }
 
 bool GameLogic::isRunning() const
@@ -350,13 +356,13 @@ TriggerZone GameLogic::createTriggerFromData(const ObjectData &data)
     switch (data.trigger.event)
     {
         case TriggerEvent::CHANGE_MAP:
-            action = [this, data]() {
+            action = [this, data](TriggerZone *self) {
                 this->loadLevel(data.trigger.map);
             };
             break;
         //case TriggerEvent::MSG_SIGN:
         case TriggerEvent::MSG_NPC:
-            action = [this, data]() {
+            action = [this, data](TriggerZone *self) {
                 showMessage(data.trigger.msg);
             };
             break;
@@ -383,6 +389,9 @@ TriggerZone GameLogic::createTriggerFromData(const ObjectData &data)
     position.h  = data.trigger.area.h;
 
     return TriggerZone(
+        data.tileId,
+        data.position,
+        data.enabled,
         position,
         action,
         data.trigger.type,
@@ -405,19 +414,31 @@ TriggerZone GameLogic::createBushTrigger(int i, int width, int tileSize,
         //action = []() {
         //    drawParticle(...);
         //};
-        action = [this]() {
+        action = [this, i](TriggerZone *self) {
+            MapData *map = this->tilemap.getCurrentMapMutable();
+            map->decorationMap[i] = BUSH_TILE + 1;
+            self->setTileId(self->getTileId() + 1);
+
             showMessage("Bush Cut!");
         };
     }
     else
     {
-        action = [this]() {
+        action = [this](TriggerZone *self) {
             showMessage("Bush particle!");
         };
     }
 
     int margin = 2;
     return TriggerZone(
+        BUSH_TILE,
+        {
+            x,
+            y,
+            tileSize,
+            tileSize
+        },
+        true,
         {
             x + margin,
             y + margin,

@@ -1,9 +1,15 @@
 #include "Trigger.h"
 #include <SDL2/SDL_rect.h>
 
-TriggerZone::TriggerZone(const SDL_Rect& _area, TriggerCallback _action, 
-                         TriggerType _type, bool _oneShot, bool _isActive)
+TriggerZone::TriggerZone(uint8_t _tileId, const SDL_Rect &_position,
+                         bool _enabled, const SDL_Rect &_area, 
+                         TriggerCallback _action, TriggerType _type, 
+                         bool _oneShot, bool _isActive)
 {
+    tileId = _tileId;
+    position = _position;
+    enabled = _enabled;
+
     area = _area;
     action = _action;
     type = _type;
@@ -16,7 +22,7 @@ TriggerZone::~TriggerZone() {}
 void TriggerZone::checkColisions(const SDL_Rect &collider, 
                                  bool actionKeyPressed, bool isAttackCollider)
 {
-    if (!isActive) return;
+    if (!isActive || !enabled) return;
 
     bool colliding = SDL_HasIntersection(&collider, &area);
 
@@ -58,7 +64,7 @@ void TriggerZone::checkColisions(const SDL_Rect &collider,
 
 void TriggerZone::triggerAction()
 {
-    if (action) action();
+    if (action) action(this);
 
     if (oneShot)
     {
@@ -69,4 +75,29 @@ void TriggerZone::triggerAction()
 const SDL_Rect *TriggerZone::getArea() const
 {
     return &area;
+}
+
+uint8_t TriggerZone::getTileId() const
+{
+    return tileId;
+}
+
+const SDL_Rect *TriggerZone::getPosition() const
+{
+    return &position;
+}
+
+void TriggerZone::setTileId(uint8_t newTileId)
+{
+    tileId = newTileId;
+}
+
+void TriggerZone::setEnable(bool _enable)
+{
+    enabled = _enable;
+}
+
+bool TriggerZone::isEnabled() const
+{
+    return enabled;
 }
