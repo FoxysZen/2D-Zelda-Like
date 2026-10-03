@@ -60,12 +60,6 @@ class Player
         void updateSprite();
 
         /**
-         * @brief Returns if the player if looking at the left.
-         * 
-         * @return true if the direction of the player is Direction::LEFT, otherwise false.
-         */
-        bool isLookingLeft() const;
-        /**
          * @brief Returns if the player is attacking.
          * 
          * @return true if PlayerStateMachine::ATTACKING.
@@ -120,6 +114,12 @@ class Player
          * @return int
          */
         int getSpriteSize() const;
+        /**
+         * @brief Returns the direction the player is looking at.
+         * 
+         * @return constant enum Direction.
+         */
+        Direction getDirection() const;
 
         /**
          * @brief Sets the new world position of the player.
@@ -164,7 +164,7 @@ class Player
         // Attack
         int attackReach = 16;
         int attackThickness = 32;
-        std::vector<std::pair<int, int>> swordSpriteOffsetFront = {
+        const std::vector<std::pair<int, int>> swordSpriteOffsetFront = {
             { -12,  0 },
             { -10,  9 },
             {  -5, 11 },
@@ -174,7 +174,17 @@ class Player
             {  16,  9 },
             {  14,  4 },
         };
-        std::vector<std::pair<int, int>> swordSpriteOffsetSide = {
+        const std::vector<std::pair<int, int>> swordSpriteOffsetLeft = {
+            {  -4, 14 },
+            {  -5, 13 },
+            { -13, 14 },
+            { -15,  7 },
+            { -14,  0 },
+            { -13,  0 },
+            { -10, -5 },
+            {  -7, -5 }
+        };
+        const std::vector<std::pair<int, int>> swordSpriteOffsetRight = {
             {  4, 14 },
             {  5, 13 },
             { 13, 14 },
@@ -183,6 +193,16 @@ class Player
             { 13,  0 },
             { 10, -5 },
             {  7, -5 },
+        };
+        const std::vector<std::pair<int, int>> swordSpriteOffsetBack = {
+            {  11,  1 },
+            {   9,  1 },
+            {   9, -6 },
+            {   0, -8 },
+            { -12, -9 },
+            { -15, -8 },
+            { -17, -3 },
+            { -18,  3 },
         };
 
         int animationFrame = 0;

@@ -66,8 +66,7 @@ void Player::updateSprite()
     }
     else if (state == PlayerStateMachine::ATTACKING)
     {
-        // +1 for isAttacking() so that it can enter the if
-        maxFrames = ATTACK_FRAMES + 1;
+        maxFrames = ATTACK_FRAMES;
     }
 
     if (animationFrame >= maxFrames)
@@ -76,23 +75,11 @@ void Player::updateSprite()
     }
 }
 
-bool Player::isLookingLeft() const
-{
-    bool left = false;
-
-    if (direction == Direction::LEFT)
-    {
-        left = true;
-    }
-
-    return left;
-}
-
 bool Player::isAttacking() const
 {
     bool attacking = false;
 
-    if (state == PlayerStateMachine::ATTACKING && animationFrame < ATTACK_FRAMES)
+    if (state == PlayerStateMachine::ATTACKING && animationFrame < ATTACK_FRAMES - 1)
     {
         attacking = true;
     }
@@ -221,14 +208,17 @@ const std::pair<int, int> *Player::getSwordSpriteOffset() const
     {
         offset = &swordSpriteOffsetFront[animationFrame];
     }
-    else if (direction == Direction::LEFT || direction == Direction::RIGHT)
+    else if (direction == Direction::RIGHT)
     {
-        offset = &swordSpriteOffsetSide[animationFrame];
+        offset = &swordSpriteOffsetRight[animationFrame];
+    }
+    else if (direction == Direction::LEFT)
+    {
+        offset = &swordSpriteOffsetLeft[animationFrame];
     }
     else if (direction == Direction::BACK)
     {
-        offset = &swordSpriteOffsetFront[animationFrame];
-        //offset = &swordSpriteOffsetBack[animationFrame];
+        offset = &swordSpriteOffsetBack[animationFrame];
     }
 
     return offset;
@@ -237,6 +227,11 @@ const std::pair<int, int> *Player::getSwordSpriteOffset() const
 int Player::getSpriteSize() const
 {
     return SPRITE_SIZE;
+}
+
+Direction Player::getDirection() const
+{
+    return direction;
 }
 
 void Player::setPosition(const SDL_Rect &newPos)

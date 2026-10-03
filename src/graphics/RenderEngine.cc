@@ -191,7 +191,7 @@ void RenderEngine::render(GameLogic *game)
     const SDL_Rect playerSprite = player->getSpritePos();
     const SDL_Rect *rawPlayerPos = player->getPosition();
     const std::string playerAtlas = player->getAtlasName();
-    bool left = player->isLookingLeft();
+    bool left = player->getDirection() == Direction::LEFT;
 
     SDL_Rect playerPos = *rawPlayerPos;
     playerPos.x = (rawPlayerPos->x - viewPort.x) * scale;
@@ -205,8 +205,12 @@ void RenderEngine::render(GameLogic *game)
         flip = SDL_FLIP_HORIZONTAL;
     }
 
-    SDL_RenderCopyEx(renderer, atlases[playerAtlas], &playerSprite, &playerPos, 
+    bool lookingBack = player->getDirection() == Direction::BACK;
+    if (!lookingBack)
+    {
+        SDL_RenderCopyEx(renderer, atlases[playerAtlas], &playerSprite, &playerPos, 
                      0.0, nullptr, flip);
+    }
 
     // Renders the weapon
     if (player->isAttacking())
@@ -226,6 +230,12 @@ void RenderEngine::render(GameLogic *game)
 
         SDL_RenderCopyEx(renderer, atlases[playerAtlas], &swordSprite, 
                          &swordPos, 0.0, nullptr, flip);
+    }
+
+    if (lookingBack)
+    {
+        SDL_RenderCopyEx(renderer, atlases[playerAtlas], &playerSprite, &playerPos, 
+                     0.0, nullptr, flip);
     }
 
     // Render Debug
