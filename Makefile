@@ -1,7 +1,7 @@
 TARGET = zelda-like
 
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -Iinclude
+CXXFLAGS = -std=c++17 -Wall -Wextra -Iinclude -MMD -MP
 
 LIBS = -lSDL2 -lSDL2_image
 
@@ -10,6 +10,7 @@ BUILD_DIR = build
 
 SRCS = $(shell find $(SRC_DIR) -name '*.cc')
 OBJS = $(patsubst $(SRC_DIR)/%.cc, $(BUILD_DIR)/%.o, $(SRCS))
+DEPS = $(OBJS:.o=.d)
 
 all: $(TARGET)
 
@@ -21,6 +22,8 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cc
 	@mkdir -p $(dir $@)
 	@echo "Compiling $<..."
 	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+-include $(DEPS)
 
 clean:
 	@echo "Cleaning..."
