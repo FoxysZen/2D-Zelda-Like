@@ -216,10 +216,10 @@ class Player
 
         const uint8_t SPRITE_SIZE = 32;
 
-        const SDL_Rect PLAYER_IDLE = { 0, 32, 32, 32 };
-        const SDL_Rect PLAYER_WALK = { 0, 64, 32, 32 };
-        const SDL_Rect PLAYER_ATTACK = { 0, 96, 32, 32 };
-        const SDL_Rect PLAYER_ITEM_HOLD = { 128, 0, 32, 32 };
+        const SDL_Rect PLAYER_IDLE = { 0, 32, SPRITE_SIZE, SPRITE_SIZE };
+        const SDL_Rect PLAYER_WALK = { 0, 64, SPRITE_SIZE, SPRITE_SIZE };
+        const SDL_Rect PLAYER_ATTACK = { 0, 96, SPRITE_SIZE, SPRITE_SIZE };
+        const SDL_Rect PLAYER_ITEM_HOLD = { 128, 0, SPRITE_SIZE, SPRITE_SIZE };
 
         const uint8_t IDLE_FRAMES = 4;
         const uint8_t WALK_FRAMES = 4;
