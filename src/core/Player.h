@@ -24,6 +24,7 @@ enum PlayerStateMachine
     IDLE,
     WALKING,
     ATTACKING,
+    ITEM_HOLD,
     SWIMMING
 };
 
@@ -218,8 +219,10 @@ class Player
         const SDL_Rect PLAYER_IDLE = { 0, 32, 32, 32 };
         const SDL_Rect PLAYER_WALK = { 0, 64, 32, 32 };
         const SDL_Rect PLAYER_ATTACK = { 0, 96, 32, 32 };
+        const SDL_Rect PLAYER_ITEM_HOLD = { 128, 0, 32, 32 };
 
         const uint8_t IDLE_FRAMES = 4;
         const uint8_t WALK_FRAMES = 4;
         const uint8_t ATTACK_FRAMES = 8;
+        const uint8_t ITEM_HOLD_FRAMES = 2;
 };
