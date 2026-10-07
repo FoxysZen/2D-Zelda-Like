@@ -1,1 +1,2 @@
 1. From testMap to testSecret to testMap the bush on the upper left corner is unbreakable.
+2. You can not attack when going diagonal left-down.
