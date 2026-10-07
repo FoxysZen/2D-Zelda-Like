@@ -2,15 +2,16 @@
 #include <SDL2/SDL_rect.h>
 
 TriggerZone::TriggerZone(uint8_t _tileId, const SDL_Rect &_position,
-                         bool _enabled, const SDL_Rect &_area, 
-                         TriggerCallback _action, TriggerType _type, 
-                         bool _oneShot, bool _isActive)
+                         bool _enabled, const SDL_Rect &_area,
+                         const SDL_Rect &_spawnPos, TriggerCallback _action, 
+                         TriggerType _type, bool _oneShot, bool _isActive)
 {
     tileId = _tileId;
     position = _position;
     enabled = _enabled;
 
     area = _area;
+    spawnPos = _spawnPos;
     action = _action;
     type = _type;
     oneShot = _oneShot;
@@ -85,6 +86,11 @@ uint8_t TriggerZone::getTileId() const
 const SDL_Rect *TriggerZone::getPosition() const
 {
     return &position;
+}
+
+const SDL_Rect *TriggerZone::getSpawnPos() const
+{
+    return &spawnPos;
 }
 
 void TriggerZone::setTileId(uint8_t newTileId)

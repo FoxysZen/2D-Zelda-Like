@@ -25,8 +25,9 @@ class TriggerZone
 {
     public:
         TriggerZone(uint8_t _tileId, const SDL_Rect &_position, bool _enabled, 
-                    const SDL_Rect &_area, TriggerCallback _action, 
-                    TriggerType _type, bool _oneShot, bool _isActive);
+                    const SDL_Rect &_area, const SDL_Rect &_spawnPos, 
+                    TriggerCallback _action, TriggerType _type, bool _oneShot, 
+                    bool _isActive);
         ~TriggerZone();
 
         /**
@@ -56,6 +57,12 @@ class TriggerZone
          * @return const SDL_Rect*
          */
         const SDL_Rect *getPosition() const;
+        /**
+         * @brief Gets the Spawn Position of the warp.
+         * 
+         * @return const SDL_Rect* 
+         */
+        const SDL_Rect *getSpawnPos() const;
         /**
          * @brief Sets the new tileId.
          * 
@@ -89,6 +96,7 @@ class TriggerZone
         
         // Trigger data
         SDL_Rect area;
+        SDL_Rect spawnPos;
         TriggerCallback action;
         TriggerType type;
         bool oneShot, isActive; // Trigger active

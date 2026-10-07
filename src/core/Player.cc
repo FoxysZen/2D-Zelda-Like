@@ -237,6 +237,17 @@ Direction Player::getDirection() const
 void Player::setPosition(const SDL_Rect &newPos)
 {
     position = newPos;
+
+    // Prevents destroying the player dimensions
+    if (newPos.w > 0)
+    {
+        position.w = newPos.w;
+    }
+    if (newPos.h > 0)
+    {
+        position.h = newPos.h;
+    }
+
     rawPosX = static_cast<float>(newPos.x);
     rawPosY = static_cast<float>(newPos.y);
 }

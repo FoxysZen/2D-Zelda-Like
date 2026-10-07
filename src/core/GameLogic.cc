@@ -1,4 +1,5 @@
 #include "GameLogic.h"
+#include <SDL2/SDL_rect.h>
 
 GameLogic::GameLogic()
 {
@@ -40,6 +41,9 @@ void GameLogic::update(const float &_deltaTime)
     if (checkKeyPressed("debug"))
     {
         debugMode = !debugMode;
+        const SDL_Rect *pos = player.getPosition();
+        std::cout << "[GameLogic] Player pos x: " << pos->x << " | y: " 
+            << pos->y << std::endl;
     }
 }
 
@@ -357,7 +361,17 @@ TriggerZone GameLogic::createTriggerFromData(const ObjectData &data)
     {
         case TriggerEvent::CHANGE_MAP:
             action = [this, data](TriggerZone *self) {
+                // Save player spawn pos before loading to avoid destroying 
+                // trigger information.
+                const SDL_Rect *spawnPos = self->getSpawnPos();
+                player.setPosition(*spawnPos);
+                camera.centerCamera(spawnPos->x, spawnPos->y);
+
+                // Load level.
                 this->loadLevel(data.trigger.map);
+                const MapData *map = tilemap.getCurrentMap();
+                int tileSize = map->tileSize;
+                camera.setMapBounds(map->mapWidth * tileSize, map->mapHeight * tileSize);
             };
             break;
         //case TriggerEvent::MSG_SIGN:
@@ -393,6 +407,7 @@ TriggerZone GameLogic::createTriggerFromData(const ObjectData &data)
         data.position,
         data.enabled,
         position,
+        data.trigger.spawnPos,
         action,
         data.trigger.type,
         data.trigger.oneShot,
@@ -418,8 +433,7 @@ TriggerZone GameLogic::createBushTrigger(int i, int width, int tileSize,
             MapData *map = this->tilemap.getCurrentMapMutable();
             map->decorationMap[i] = BUSH_TILE + 1;
             self->setTileId(self->getTileId() + 1);
-
-            showMessage("Bush Cut!");
+            // Drop item
         };
     }
     else
@@ -445,6 +459,7 @@ TriggerZone GameLogic::createBushTrigger(int i, int width, int tileSize,
             tileSize - (margin * 2),
             tileSize - (margin * 2)
         },
+        { 0, 0, 0, 0 },
         action,
         type,
         oneShot,

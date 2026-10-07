@@ -27,12 +27,10 @@ class Camera
         void update(const SDL_Rect &targetPos);
 
         /**
-         * @brief Centers the camera around a coordinate XY
+         * @brief Centers the camera around a coordinate XY (in pixels).
          * 
          * @param coordX The coordinate X of the point.
          * @param coordY The coordinate Y of the point.
-         * @param width  The width of the screen.
-         * @param height The height of the screen.
          */
         void centerCamera(int coordX, int coordY);
         /**

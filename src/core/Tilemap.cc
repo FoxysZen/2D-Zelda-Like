@@ -10,6 +10,10 @@ void Tilemap::loadTileMap(const std::string &name)
     {
         LevelManager::getTestMap(currentMap);
     }
+    else if (name == "testSecret")
+    {
+        LevelManager::getTestSecretMap(currentMap);
+    }
     else
     {
         std::cerr << "Map: " << name << " does not exist." << std::endl;
