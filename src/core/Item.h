@@ -2,6 +2,17 @@
 #include <SDL2/SDL_rect.h>
 #include <string>
 
+/**
+ * @brief Identifies the type of item.
+ */
+enum ItemType
+{
+    HEART,
+    RUPI,
+    SWORD,
+    JAM
+};
+
 class Item
 {
     public:
@@ -63,6 +74,8 @@ class Item
         bool inParabola = false;
         float timeInParabola = 0.0f;
         float parabolaTargetHeight;
+
+        ItemType type;
 
         // Animation
         int animationFrame = 0;
