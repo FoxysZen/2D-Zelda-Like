@@ -1,5 +1,5 @@
 #include "GameLogic.h"
-#include <SDL2/SDL_rect.h>
+#include "Player.h"
 
 GameLogic::GameLogic()
 {
@@ -44,6 +44,13 @@ void GameLogic::update(const float &_deltaTime)
         const SDL_Rect *pos = player.getPosition();
         std::cout << "[GameLogic] Player pos x: " << pos->x << " | y: " 
             << pos->y << std::endl;
+    }
+
+    if (checkKeyPressed("revive"))
+    {
+        player.heal(100);
+        player.setState(PlayerStateMachine::IDLE);
+        std::cout << "[GameLogic] Player revived!\n";
     }
 }
 
@@ -148,6 +155,12 @@ void GameLogic::setRunning(bool value)
 
 void GameLogic::handlePlayerMovement(float dirX, float dirY)
 {
+    // No movement neither direction change while defeated
+    if (player.getState() == PlayerStateMachine::DEFEATED)
+    {
+        return;
+    }
+
     // Normalize
     if (dirX != 0.0f && dirY != 0.0f)
     {
@@ -220,9 +233,9 @@ void GameLogic::handlePlayerMovement(float dirX, float dirY)
 
 void GameLogic::initPlayer()
 {
-    SDL_Rect sprite = {0, 0, 32, 32};
+    SDL_Rect sprite = {0, 0, 16, 16};
 
-    player.init(sprite, {32, 32, 32, 32}, {11, 26, 11, 6});
+    player.init(sprite, {32, 32, 16, 16}, {3, 10, 10, 5});
 }
 
 void GameLogic::registerTriggerInGrid(TriggerZone *trigger)
@@ -349,6 +362,10 @@ bool GameLogic::checkKeyPressed(const std::string &action)
     {
         isPressed = true;
     }
+    else if (action == "revive" && input->isKeyPressed(SDL_SCANCODE_1))
+    {
+        isPressed = true;
+    }
 
     return isPressed;
 }
@@ -376,20 +393,22 @@ TriggerZone GameLogic::createTriggerFromData(const ObjectData &data)
             break;
         //case TriggerEvent::MSG_SIGN:
         case TriggerEvent::MSG_NPC:
-            action = [this, data](TriggerZone *self) {
+            action = [this, data](TriggerZone*) {
                 showMessage(data.trigger.msg);
             };
             break;
-        //case TriggerEvent::TAKE_DMG:
-        //    action = [this, data]() {
-        //        this->player.takeDamage(data.trigger.amount);
-        //    };
-        //    break;
-        //case TriggerEvent::HEAL:
-        //    action = [this, data]() {
-        //        this->player.heal(data.trigger.amount);
-        //    };
-        //    break;
+        case TriggerEvent::TAKE_DMG:
+            action = [this, data](TriggerZone*) {
+                this->player.takeDamage(data.trigger.amount);
+                showMessage(data.trigger.msg);
+            };
+            break;
+        case TriggerEvent::HEAL:
+            action = [this, data](TriggerZone*) {
+                this->player.heal(data.trigger.amount);
+                showMessage(data.trigger.msg);
+            };
+            break;
         case TriggerEvent::NONE:
         default:
             action = nullptr;
@@ -438,7 +457,7 @@ TriggerZone GameLogic::createBushTrigger(int i, int width, int tileSize,
     }
     else
     {
-        action = [this](TriggerZone *self) {
+        action = [this](TriggerZone*) {
             showMessage("Bush particle!");
         };
     }

@@ -7,6 +7,8 @@
 
 const SDL_Rect WARP_HITBOX = { 0, 0, 16, 8 };
 const SDL_Rect ITEM_HITBOX = { -8, -8, 32, 32 };
+const SDL_Rect DAMAGE_HITBOX = { 2, 2, 12, 12 };
+const uint8_t PLAYER_SIZE = 16;
 
 /**
  * @brief Identifies the type of event the trigger will do.
@@ -26,11 +28,11 @@ enum TriggerEvent
  */
 struct TriggerData
 {
-    SDL_Rect area = { 0, 0, 16, 16 };
+    SDL_Rect area = { 0, 0, PLAYER_SIZE, PLAYER_SIZE };
     TriggerEvent event = TriggerEvent::NONE;
     TriggerType type = TriggerType::ON_ENTER;
     std::string map = "test";
-    SDL_Rect spawnPos = { 0, 0, 16, 16 };
+    SDL_Rect spawnPos = { 0, 0, PLAYER_SIZE, PLAYER_SIZE };
     std::string msg = "Default msg.";
     int amount = 1;
 
@@ -107,7 +109,8 @@ class LevelManager
             // NPC, signs, locked doors...
             level.objectMap = {
                 { 39, { 336, 128, 16, 16 }, true, { ITEM_HITBOX, TriggerEvent::MSG_NPC, TriggerType::INTERACTIVE, "", {}, "SIGN SINGING!" } },
-                { 52, { 320, 112, 16, 16 }, true, { WARP_HITBOX, TriggerEvent::CHANGE_MAP, TriggerType::ON_ENTER, "testSecret", { 144 - 8, 48, 32, 32 }, "WARPED TO TEST SECRET MAP!" } } // Warp
+                { 39, { 240, 160, 16, 16 }, true, { ITEM_HITBOX, TriggerEvent::TAKE_DMG, TriggerType::ON_ENTER, "", {}, "Damaged 10!", 10 } },
+                { 52, { 320, 112, 16, 16 }, true, { WARP_HITBOX, TriggerEvent::CHANGE_MAP, TriggerType::ON_ENTER, "testSecret", { 144 - 8, 48, PLAYER_SIZE, PLAYER_SIZE }, "WARPED TO TEST SECRET MAP!" } } // Warp
             };
 
             level.decorationMap = {
@@ -191,7 +194,7 @@ class LevelManager
             level.objectMap = {
                 { 14, { 32, 272, 16, 16 }, true, { ITEM_HITBOX, TriggerEvent::MSG_NPC, TriggerType::INTERACTIVE, "", {}, "CHEST CHESTING!" } }, // Chest
                 { 39, { 112, 64, 16, 16 }, true, { ITEM_HITBOX, TriggerEvent::MSG_NPC, TriggerType::INTERACTIVE, "", {}, "SIGN SIGNING!" } }, // Sign
-                { 52, { 144, 48, 16, 16 }, true, { WARP_HITBOX, TriggerEvent::CHANGE_MAP, TriggerType::ON_ENTER, "test", { 320 - 8, 112, 32, 32 }, "WARPED TO TEST MAP!" } } // Warp
+                { 52, { 144, 48, 16, 16 }, true, { WARP_HITBOX, TriggerEvent::CHANGE_MAP, TriggerType::ON_ENTER, "test", { 320 - 8, 112, PLAYER_SIZE, PLAYER_SIZE }, "WARPED TO TEST MAP!" } } // Warp
             };
 
             level.decorationMap = {

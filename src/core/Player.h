@@ -23,6 +23,7 @@ enum PlayerStateMachine
 {
     IDLE,
     WALKING,
+    DEFEATED,
     ATTACKING,
     ITEM_HOLD,
     SWIMMING
@@ -121,6 +122,12 @@ class Player
          * @return constant enum Direction.
          */
         Direction getDirection() const;
+        /**
+         * @brief Returns the current state of the player.
+         * 
+         * @return PlayerStateMachine The state.
+         */
+        PlayerStateMachine getState() const;
 
         /**
          * @brief Sets the new world position of the player.
@@ -153,9 +160,31 @@ class Player
          */
         void setDirection(Direction newDir);
 
+        /**
+         * @brief Substracts amount to the Player health.
+         * 
+         * @param amount The amount of damage recibed.
+         */
+        void takeDamage(int amount);
+        /**
+         * @brief Adds amount to the Player health.
+         * 
+         * @param amount The amount of health recovered.
+         */
+        void heal(int amount);
+
     private:
+        const uint8_t SPRITE_SIZE = 16;
+
+        // Stats
+        int health = 12; // 3 hearts, each 4 parts
+        int maxHealth = 12; // Current maximum
+        int maxGameHealth = 80; // Max obtainable health (20 hearts)
+        int attackDamage = 4;
+
+        // Logic
         SDL_Rect spritePos;
-        SDL_Rect position = {32, 32, 32, 32};
+        SDL_Rect position = {32, 32, SPRITE_SIZE, SPRITE_SIZE};
         SDL_Rect colision = { 8, 24, 16,  8};
         float rawPosX = 32.0f, rawPosY = 32.0f;
         float subX = 0.0f, subY = 0.0f;
@@ -209,20 +238,20 @@ class Player
         int animationFrame = 0;
 
         // Not const so so that the appearance can be changed in-game.
-        std::string currentAtlas = "assets/playerAtlas.png";
+        std::string currentAtlas = "assets/playerAtlas_16x16.png";
 
         PlayerStateMachine state = IDLE;
         Direction direction = FRONT;
 
-        const uint8_t SPRITE_SIZE = 32;
-
-        const SDL_Rect PLAYER_IDLE = { 0, 32, SPRITE_SIZE, SPRITE_SIZE };
-        const SDL_Rect PLAYER_WALK = { 0, 64, SPRITE_SIZE, SPRITE_SIZE };
-        const SDL_Rect PLAYER_ATTACK = { 0, 96, SPRITE_SIZE, SPRITE_SIZE };
-        const SDL_Rect PLAYER_ITEM_HOLD = { 128, 0, SPRITE_SIZE, SPRITE_SIZE };
+        const SDL_Rect PLAYER_IDLE = { 0, 16, SPRITE_SIZE, SPRITE_SIZE };
+        const SDL_Rect PLAYER_WALK = { 0, 32, SPRITE_SIZE, SPRITE_SIZE };
+        const SDL_Rect PLAYER_DEFEAT = { 0, 48, SPRITE_SIZE, SPRITE_SIZE };
+        const SDL_Rect PLAYER_ATTACK = { 0, 64, SPRITE_SIZE, SPRITE_SIZE };
+        const SDL_Rect PLAYER_ITEM_HOLD = { 64, 0, SPRITE_SIZE, SPRITE_SIZE };
 
         const uint8_t IDLE_FRAMES = 4;
         const uint8_t WALK_FRAMES = 4;
+        const uint8_t DEFEAT_FRAMES = 6;
         const uint8_t ATTACK_FRAMES = 8;
         const uint8_t ITEM_HOLD_FRAMES = 2;
 };

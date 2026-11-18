@@ -1,9 +1,4 @@
 #include "RenderEngine.h"
-#include <SDL2/SDL_rect.h>
-#include <SDL2/SDL_stdinc.h>
-#include <cstdint>
-#include <ostream>
-#include <utility>
 
 RenderEngine::RenderEngine() {}
 RenderEngine::~RenderEngine() {}

@@ -52,6 +52,15 @@ void Player::move(float dirX, float dirY, float deltaTime)
 
 void Player::updateSprite()
 {
+    if (state == PlayerStateMachine::DEFEATED)
+    {
+        if (animationFrame < DEFEAT_FRAMES - 1)
+        {
+            ++animationFrame;
+        }
+        return; // Freeze on last frame
+    }
+
     ++animationFrame;
 
     int maxFrames = 1;
@@ -64,6 +73,10 @@ void Player::updateSprite()
     {
         maxFrames = IDLE_FRAMES;
     }
+    else if (state == PlayerStateMachine::DEFEATED)
+    {
+        maxFrames = DEFEAT_FRAMES;
+    }
     else if (state == PlayerStateMachine::ATTACKING)
     {
         maxFrames = ATTACK_FRAMES;
@@ -72,6 +85,7 @@ void Player::updateSprite()
     if (animationFrame >= maxFrames)
     {
         animationFrame = 0;
+        state = PlayerStateMachine::IDLE;
     }
 }
 
@@ -79,7 +93,8 @@ bool Player::isAttacking() const
 {
     bool attacking = false;
 
-    if (state == PlayerStateMachine::ATTACKING && animationFrame < ATTACK_FRAMES - 1)
+    if (state == PlayerStateMachine::ATTACKING &&
+        animationFrame < ATTACK_FRAMES - 1)
     {
         attacking = true;
     }
@@ -111,6 +126,11 @@ const SDL_Rect Player::getSpritePos() const
     {
         pos = PLAYER_IDLE;
         frames = IDLE_FRAMES;
+    }
+    else if (state == PlayerStateMachine::DEFEATED)
+    {
+        pos = PLAYER_DEFEAT;
+        frames = DEFEAT_FRAMES;
     }
     else if (state == PlayerStateMachine::ATTACKING)
     {
@@ -189,6 +209,9 @@ float Player::getAnimationRate() const
         case PlayerStateMachine::WALKING:
             rate = 0.125f;
             break;
+        case PlayerStateMachine::DEFEATED:
+            rate = 0.125f;
+            break;
         case PlayerStateMachine::ATTACKING:
             rate = 0.035f;
             break;
@@ -234,6 +257,11 @@ Direction Player::getDirection() const
     return direction;
 }
 
+PlayerStateMachine Player::getState() const
+{
+    return state;
+}
+
 void Player::setPosition(const SDL_Rect &newPos)
 {
     position = newPos;
@@ -269,7 +297,12 @@ void Player::setState(PlayerStateMachine newState)
     if (state != newState)
     {
         // No state change while attacking (Except death).
-        if (isAttacking())
+        if (isAttacking() && newState != PlayerStateMachine::DEFEATED)
+        {
+            return;
+        }
+
+        if (state == PlayerStateMachine::DEFEATED && health <= 0)
         {
             return;
         }
@@ -282,4 +315,21 @@ void Player::setState(PlayerStateMachine newState)
 void Player::setDirection(Direction newDir)
 {
     direction = newDir;
+}
+
+void Player::takeDamage(int amount)
+{
+    health -= amount;
+    if (health <= 0) // Defeated
+    {
+        setState(PlayerStateMachine::DEFEATED);
+    }
+}
+void Player::heal(int amount)
+{
+    health += amount;
+    if (health > maxHealth)
+    {
+        health = maxHealth;
+    }
 }
