@@ -49,5 +49,5 @@ class PhysicsSystem
          * @param axis      Axis of correction.
          */
         void resolveSlopeCollision(SDL_Rect &colA, const SDL_Rect &tileRect, 
-                                   uint8_t slopeType, Axis axis);
+                                   uint16_t slopeType, Axis axis);
 };

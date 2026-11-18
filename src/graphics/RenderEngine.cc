@@ -112,7 +112,7 @@ void RenderEngine::render(GameLogic *game)
         for (int x = startX; x < endX; ++x)
         {
             // Base Tiles
-            uint8_t tileId = map->worldMap[y * mapWidth + x];
+            uint16_t tileId = map->worldMap[y * mapWidth + x];
 
             int animate = hasAnimation(tileId);
 
@@ -162,7 +162,7 @@ void RenderEngine::render(GameLogic *game)
     {
         if (!data.isEnabled()) continue;
         
-        uint8_t tileId = data.getTileId();
+        uint16_t tileId = data.getTileId();
         if (tileId == bush || tileId == cutBush) continue;
         
         int animate = hasAnimation(tileId);
@@ -301,7 +301,7 @@ void RenderEngine::drawHitbox(const SDL_Rect &worldHitbox,
     SDL_RenderDrawRect(renderer, &screenHitbox);
 }
 
-bool RenderEngine::is2FrameAnimation(uint8_t tileId) const
+bool RenderEngine::is2FrameAnimation(uint16_t tileId) const
 {
     bool single = true;
 
@@ -310,6 +310,8 @@ bool RenderEngine::is2FrameAnimation(uint8_t tileId) const
         case blueFlower:
         case whiteFlower:
         case redMushroom:
+
+        case waterFull:
             single = false;
             break;
         default:
@@ -320,7 +322,7 @@ bool RenderEngine::is2FrameAnimation(uint8_t tileId) const
     return single;
 }
 
-int RenderEngine::hasAnimation(uint8_t tileId) const
+int RenderEngine::hasAnimation(uint16_t tileId) const
 {
     bool animated = false;
 

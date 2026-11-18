@@ -68,14 +68,14 @@ class RenderEngine
          * @param tileId The id of the tile to check.
          * @return True if the tile is 2 frame animation, otherwise false.
          */
-        bool is2FrameAnimation(uint8_t tileId) const;
+        bool is2FrameAnimation(uint16_t tileId) const;
         /**
          * @brief Checks if the tile has animation.
          * 
          * @param tileId The id of the tile.
          * @return int 1 if has animation, otherwise 0.
          */
-        int hasAnimation(uint8_t tileId) const;
+        int hasAnimation(uint16_t tileId) const;
         
         SDL_Window *window;
         SDL_Renderer *renderer;
@@ -87,27 +87,27 @@ class RenderEngine
 
         // Tile IDs
         // Water tile
-        static constexpr uint8_t waterFull = 230;
+        static constexpr uint16_t waterFull = 252;
         // Water inside
-        static constexpr uint8_t waterInsideCornerUL = 224;
-        static constexpr uint8_t waterInsideCornerDL = 240;
-        static constexpr uint8_t waterInsideCornerUR = 226;
-        static constexpr uint8_t waterInsideCornerDR = 242;
+        static constexpr uint16_t waterInsideCornerUL = 220;
+        static constexpr uint16_t waterInsideCornerDL = 236;
+        static constexpr uint16_t waterInsideCornerUR = 222;
+        static constexpr uint16_t waterInsideCornerDR = 238;
         // Water outside
-        static constexpr uint8_t waterOutsideCornerUL = 212;
-        static constexpr uint8_t waterOutsideCornerDL = 244;
-        static constexpr uint8_t waterOutsideCornerUR = 216;
-        static constexpr uint8_t waterOutsideCornerDR = 248;
+        static constexpr uint16_t waterOutsideCornerUL = 214;
+        static constexpr uint16_t waterOutsideCornerDL = 246;
+        static constexpr uint16_t waterOutsideCornerUR = 218;
+        static constexpr uint16_t waterOutsideCornerDR = 250;
         // Water sides
-        static constexpr uint8_t waterSideU = 214;
-        static constexpr uint8_t waterSideL = 228;
-        static constexpr uint8_t waterSideR = 232;
-        static constexpr uint8_t waterSideD = 246;
+        static constexpr uint16_t waterSideU = 216;
+        static constexpr uint16_t waterSideL = 230;
+        static constexpr uint16_t waterSideR = 234;
+        static constexpr uint16_t waterSideD = 248;
 
         // Flora
-        static constexpr uint8_t blueFlower  = 6;
-        static constexpr uint8_t whiteFlower = 22;
-        static constexpr uint8_t redMushroom = 10;
-        static constexpr uint8_t bush = 40;
-        static constexpr uint8_t cutBush = 41;
+        static constexpr uint16_t blueFlower  = 6;
+        static constexpr uint16_t whiteFlower = 22;
+        static constexpr uint16_t redMushroom = 38;
+        static constexpr uint16_t bush = 10;
+        static constexpr uint16_t cutBush = 41;
 };

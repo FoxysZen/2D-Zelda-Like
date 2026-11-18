@@ -172,5 +172,5 @@ class GameLogic
         std::vector<std::vector<TriggerZone*>> triggerGrid;
 
         // Trigger tiles
-        const uint8_t BUSH_TILE = 40;
+        const uint16_t BUSH_TILE = 10;
 };

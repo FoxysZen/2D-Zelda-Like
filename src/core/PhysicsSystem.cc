@@ -32,7 +32,7 @@ bool PhysicsSystem::checkMapColisions(SDL_Rect &colA, const MapData &map,
             if (j < 0 || j >= map.mapHeight)
                 continue;
 
-            uint8_t tile = map.colisionMap[j * map.mapWidth + i];
+            uint16_t tile = map.colisionMap[j * map.mapWidth + i];
 
             if (tile == 0) // No colision
                 continue;
@@ -132,7 +132,7 @@ void PhysicsSystem::resolveBlockCollision(SDL_Rect &colA,
 
 void PhysicsSystem::resolveSlopeCollision(SDL_Rect &colA, 
                                           const SDL_Rect &tileRect, 
-                                          uint8_t slopeType, Axis axis)
+                                          uint16_t slopeType, Axis axis)
 {
     SDL_Rect intersection;
     if (!SDL_IntersectRect(&colA, &tileRect, &intersection))
