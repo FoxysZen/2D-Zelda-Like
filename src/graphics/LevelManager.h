@@ -14,8 +14,10 @@ const uint16_t SIGN_NORMAL = 242;
 const uint16_t SIGN_MOSSED = 243;
 const uint16_t CHEST = 26;
 const uint16_t WARP_OPEN_CAVE_GND =  52; // Ground
-const uint16_t WARP_OPEN_CAVE_WTR = 296; // Water
-const uint16_t WARP_OPEN_CAVE_MFT = 296; // Mineshaft
+const uint16_t WARP_OPEN_CAVE_WTR = 196; // Water
+const uint16_t WARP_OPEN_CAVE_MFT =  84; // Mineshaft
+
+const uint16_t TRAP = 27;
 
 /**
  * @brief Identifies the type of event the trigger will do.
@@ -116,7 +118,7 @@ class LevelManager
             // NPC, signs, locked doors...
             level.objectMap = {
                 { SIGN_MOSSED, { 336, 128, 16, 16 }, true, { ITEM_HITBOX, TriggerEvent::MSG_NPC, TriggerType::INTERACTIVE, "", {}, "SIGN SINGING!" } },
-                { CHEST, { 240, 160, 16, 16 }, true, { ITEM_HITBOX, TriggerEvent::TAKE_DMG, TriggerType::ON_ENTER, "", {}, "Damaged 10!", 10 } },
+                { TRAP, { 240, 160, 16, 16 }, true, { DAMAGE_HITBOX, TriggerEvent::TAKE_DMG, TriggerType::ON_ENTER, "", {}, "Damaged 10!", 10 } },
                 { WARP_OPEN_CAVE_GND, { 320, 112, 16, 16 }, true, { WARP_HITBOX, TriggerEvent::CHANGE_MAP, TriggerType::ON_ENTER, "testSecret", { 144 - 8, 48, PLAYER_SIZE, PLAYER_SIZE }, "WARPED TO TEST SECRET MAP!" } } // Warp
             };
 

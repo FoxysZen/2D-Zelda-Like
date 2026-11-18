@@ -1,4 +1,5 @@
 #include "RenderEngine.h"
+#include <SDL2/SDL_rect.h>
 
 RenderEngine::RenderEngine() {}
 RenderEngine::~RenderEngine() {}
@@ -248,6 +249,7 @@ void RenderEngine::render(GameLogic *game)
     // Render Debug
     if (game->isInDebugMode())
     {
+        // Player
         const SDL_Rect swordHitbox = player->getSwordHitbox();
         const SDL_Rect *playerCol  = player->getColision();
         
@@ -272,6 +274,41 @@ void RenderEngine::render(GameLogic *game)
             drawHitbox(swordWorldHitbox, *game->getCamera(), blue);
         }
         drawHitbox(playerWorldHitbox, *game->getCamera(), green);
+
+        // Objects
+        const MapData *mapData = game->getTileMap()->getCurrentMap();
+        int size = mapData->objectMap.size();
+        for (int i = 0; i < size; ++i)
+        {
+            const SDL_Rect *trigger = &mapData->objectMap[i].trigger.area;
+            const SDL_Rect *position = &mapData->objectMap[i].position;
+            SDL_Rect objectHitbox = {
+                position->x + trigger->x,
+                position->y + trigger->y,
+                trigger->w,
+                trigger->h
+            };
+            SDL_Color color = { 255, 255, 255, 255 };
+
+            switch (mapData->objectMap[i].tileId)
+            {
+                case TRAP:
+                    color = { 255, 0, 0, 255 };
+                    break;
+                case CHEST:
+                case SIGN_NORMAL:
+                case SIGN_MOSSED:
+                    color = { 0, 255, 255, 255 };
+                    break;
+                case WARP_OPEN_CAVE_GND:
+                case WARP_OPEN_CAVE_WTR:
+                case WARP_OPEN_CAVE_MFT:
+                    color = { 255, 0, 255, 255 };
+                    break;
+            }
+
+            drawHitbox(objectHitbox, *game->getCamera(), color);
+        }
     }
 
     // Render UI

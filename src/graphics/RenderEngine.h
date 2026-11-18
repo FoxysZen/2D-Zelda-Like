@@ -110,4 +110,15 @@ class RenderEngine
         static constexpr uint16_t redMushroom = 38;
         static constexpr uint16_t bush = 10;
         static constexpr uint16_t cutBush = 41;
+
+        // Hitboxes
+        // Interactable (Blue)
+        static constexpr uint16_t SIGN_NORMAL = 242;
+        static constexpr uint16_t SIGN_MOSSED = 243;
+        static constexpr uint16_t CHEST = 26;
+        static constexpr uint16_t WARP_OPEN_CAVE_GND =  52; // Ground
+        static constexpr uint16_t WARP_OPEN_CAVE_WTR = 196; // Water
+        static constexpr uint16_t WARP_OPEN_CAVE_MFT =  84; // Mineshaft
+        // Damage (Red)
+        static constexpr uint16_t TRAP = 27;
 };
